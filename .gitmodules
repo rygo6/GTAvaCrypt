@@ -1,0 +1,3 @@
+[submodule "PoiyomiToonShader"]
+	path = PoiyomiToonShader
+	url = git@github.com:rygo6/PoiyomiToonShader.git
