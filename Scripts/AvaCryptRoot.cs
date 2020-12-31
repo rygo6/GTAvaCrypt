@@ -1,6 +1,5 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace GeoTetra.ModelObfuscator
 {
@@ -28,6 +27,7 @@ namespace GeoTetra.ModelObfuscator
         [SerializeField] 
         private int _key3;
 
+        #if UNITY_EDITOR
         [ContextMenu("Encrypt Avatar")]
         private void EncryptAvatar()
         {
@@ -36,7 +36,7 @@ namespace GeoTetra.ModelObfuscator
             if (existingEncodedGameObject != null) DestroyImmediate(existingEncodedGameObject);
             
             GameObject encodedGameObject = Instantiate(gameObject);
-            encodedGameObject.name = encodedGameObject.name.Replace("(Clone)", " Encoded");
+            encodedGameObject.name = encodedGameObject.name.Replace("(Clone)", "_Encrypted");
             encodedGameObject.SetActive(true);
             
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
@@ -49,6 +49,12 @@ namespace GeoTetra.ModelObfuscator
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
                 skinnedMeshRenderer.sharedMesh = EncryptMesh(skinnedMeshRenderer.sharedMesh);
+            }
+            
+            AvaCryptRoot[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptRoot>();
+            foreach (AvaCryptRoot avaCryptRoot in avaCryptRoots)
+            {
+                DestroyImmediate(avaCryptRoot);
             }
             
             // Disable old for convienence.
@@ -101,8 +107,8 @@ namespace GeoTetra.ModelObfuscator
             }
 
             string existingMeshPath = AssetDatabase.GetAssetPath(mesh);
-            Debug.Log($"Existing Mesh Path {existingMeshPath}");
-            string obfuscatedMeshPath = existingMeshPath.Replace(".fbx", "_encoded.asset");
+            Debug.Log($"Existing Mesh Path {existingMeshPath} {mesh}");
+            string obfuscatedMeshPath = existingMeshPath.Replace(".fbx", $"_{mesh}_Encrypted.asset");
             Debug.Log($"Obfuscated Mesh Path {obfuscatedMeshPath}");
 
             Mesh newMesh = new Mesh
@@ -151,6 +157,6 @@ namespace GeoTetra.ModelObfuscator
 
             return newMesh;
         }
-        
+        #endif
     }
 }
