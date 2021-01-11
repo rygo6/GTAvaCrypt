@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -51,8 +52,10 @@ namespace GeoTetra.GTAvaCrypt
             string controllerFileName = System.IO.Path.GetFileName(controllerPath);
             
             string clipName = $"{gameObject.name}_{AvaCryptKeyNames[index]}";
-            string clipName0 = $"{clipName}_0.anim";
-            string clipName100 = $"{clipName}_100.anim";
+            string clipName0 = $"{clipName}_0";
+            string clipName0File = $"{clipName0}.anim";
+            string clipName100 = $"{clipName}_100";
+            string clipName100File = $"{clipName100}.anim";
             
             if (controller.animationClips.All(c => c.name != clipName0))
             {
@@ -60,7 +63,7 @@ namespace GeoTetra.GTAvaCrypt
                 {
                     name = clipName0
                 };
-                string clip0Path = controllerPath.Replace(controllerFileName, clipName0);
+                string clip0Path = controllerPath.Replace(controllerFileName, clipName0File);
                 AssetDatabase.CreateAsset(_clips0[index], clip0Path);
                 AssetDatabase.SaveAssets();
                 Debug.Log($"Adding and Saving Clip: {clip0Path}");
@@ -77,7 +80,7 @@ namespace GeoTetra.GTAvaCrypt
                 {
                     name = clipName100
                 };
-                string clip100Path = controllerPath.Replace(controllerFileName, clipName100);
+                string clip100Path = controllerPath.Replace(controllerFileName, clipName100File);
                 AssetDatabase.CreateAsset(_clips100[index], clip100Path);
                 AssetDatabase.SaveAssets();
                 Debug.Log($"Adding and Saving Clip: {clip100Path}");
@@ -107,18 +110,21 @@ namespace GeoTetra.GTAvaCrypt
 
         public void ValidateLayers(AnimatorController controller)
         {
+            // Easiest just to remove and re-add the AvaCrypt key layers.
+
+            foreach (string keyName in AvaCryptKeyNames)
+            {
+                for (int l = controller.layers.Length - 1; l > -1; --l)
+                {
+                    if (controller.layers[l].name == keyName) controller.RemoveLayer(l);
+                }
+            }
+
             for (int i = 0; i < AvaCryptKeyNames.Length; ++i)
             {
-                if (controller.layers.All(layer => layer.name != AvaCryptKeyNames[i]))
-                {
-                    AnimatorControllerLayer layer0 = CreateLayer(i);
-                    controller.AddLayer(layer0);
-                    Debug.Log($"Adding layer: {AvaCryptKeyNames[i]}");
-                }
-                else
-                {
-                    Debug.Log($"Layer already added: {AvaCryptKeyNames[i]}");
-                }
+                AnimatorControllerLayer layer0 = CreateLayer(i);
+                controller.AddLayer(layer0);
+                Debug.Log($"Adding layer: {AvaCryptKeyNames[i]}");
             }
         }
 
@@ -132,6 +138,7 @@ namespace GeoTetra.GTAvaCrypt
             };
 
             AnimatorState state = layer.stateMachine.AddState("Blend Tree");
+            state.speed = 1;
 
             BlendTree blendTree = new BlendTree
             {
@@ -142,16 +149,18 @@ namespace GeoTetra.GTAvaCrypt
 
             ChildMotion childMotion0 = new ChildMotion
             {
-                motion = _clips0[index]
+                motion = _clips0[index],
+                timeScale = 1
             };
             ChildMotion childMotion1 = new ChildMotion
             {
-                motion = _clips100[index]
+                motion = _clips100[index],
+                timeScale = 1
             };
             blendTree.children = new ChildMotion[2] {childMotion0, childMotion1};
 
             state.motion = blendTree;
-
+            
             return layer;
         }
     }

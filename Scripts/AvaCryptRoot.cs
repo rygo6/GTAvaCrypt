@@ -1,50 +1,59 @@
-﻿using System;
-using UnityEditor;
-using UnityEditor.Animations;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.Animations;
+#endif
 
 namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptRoot : MonoBehaviour
     {
         [Header("Higher value causes more distortion. Default = .02")]
-        [Range(.005f, .05f)]
+        [Range(.005f, .2f)]
         [SerializeField] 
         private float _distortRatio = .02f;
         
         [Header("The four values which must be entered in game to display the model.")]
-        [Range(0, 100)]
+        [Range(3, 100)]
         [SerializeField] 
         private int _key0;
         
-        [Range(0, 100)]
+        [Range(3, 100)]
         [SerializeField] 
         private int _key1;
         
-        [Range(0, 100)]
+        [Range(3, 100)]
         [SerializeField] 
         private int _key2;
         
-        [Range(0, 100)]
+        [Range(3, 100)]
         [SerializeField] 
         private int _key3;
 
         #if UNITY_EDITOR
-
         private readonly AvaCryptController _avaCryptController = new AvaCryptController();
         private readonly AvaCryptMesh _avaCryptMesh = new AvaCryptMesh();
+        
+        public void ValidateAnimatorController()
+        {
+            AnimatorController controller = GetAnimatorController();
 
-        [ContextMenu("Validate Animator Controller")]
-        private void ValidateAnimatorController()
+            _avaCryptController.ValidateAnimations(gameObject, controller);
+            _avaCryptController.ValidateParameters(controller);
+            _avaCryptController.ValidateLayers(controller);
+        }
+
+        private AnimatorController GetAnimatorController()
         {
             if (transform.parent != null)
             {
                 EditorUtility.DisplayDialog("AvaCryptRoot component not on a Root GameObject.", 
                     "The GameObject which the AvaCryptRoot component is placed on must not be the child of any other GameObject.", 
                     "Ok");
-                return;
+                return null;
             }
             
             Animator animator = GetComponent<Animator>();
@@ -53,7 +62,7 @@ namespace GeoTetra.GTAvaCrypt
                 EditorUtility.DisplayDialog("No Animator.", 
                     "Add an animator to the Avatar's root GameObject.", 
                     "Ok");
-                return;
+                return null;
             }
             
             RuntimeAnimatorController runtimeController = animator.runtimeAnimatorController;
@@ -62,26 +71,25 @@ namespace GeoTetra.GTAvaCrypt
                 EditorUtility.DisplayDialog("Animator has no AnimatorController.", 
                     "Add an AnimatorController to the Animator component.", 
                     "Ok");
-                return;
+                return null;
             }
      
             AnimatorController controller = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>(UnityEditor.AssetDatabase.GetAssetPath(runtimeController));
-            if(controller == null)
+            if (controller == null)
             {
                 EditorUtility.DisplayDialog("Could not get AnimatorController.", 
                     "This shouldn't happen... don't know why this would happen.", 
                     "Ok");
-                return;
+                return null;
             }
 
-            _avaCryptController.ValidateAnimations(gameObject, controller);
-            _avaCryptController.ValidateParameters(controller);
-            _avaCryptController.ValidateLayers(controller);
+            return controller;
         }
         
-        [ContextMenu("Encrypt Meshes")]
-        private void EncryptMeshes()
+        public void EncryptAvatar()
         {
+            ValidateAnimatorController();
+            
             string newName = gameObject.name + "_Encrypted";
             
             // delete old GO, do as such in case its disabled
@@ -120,10 +128,10 @@ namespace GeoTetra.GTAvaCrypt
 
         private void Reset()
         {
-            if (_key0 == 0) _key0 = Random.Range(0, 100);
-            if (_key1 == 0) _key1 = Random.Range(0, 100);
-            if (_key2 == 0) _key2 = Random.Range(0, 100);
-            if (_key3 == 0) _key3 = Random.Range(0, 100);
+            if (_key0 == 0) _key0 = Random.Range(3, 100);
+            if (_key1 == 0) _key1 = Random.Range(3, 100);
+            if (_key2 == 0) _key2 = Random.Range(3, 100);
+            if (_key3 == 0) _key3 = Random.Range(3, 100);
         }
 
         private void OnValidate()
