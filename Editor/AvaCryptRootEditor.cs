@@ -29,11 +29,13 @@ namespace GeoTetra.GTAvaCrypt
             AvaCryptRoot avaCryptRoot = target as AvaCryptRoot;
             
             EditorGUILayout.Space();
+            GUILayout.Label("Validate all parameters, layers and animations are correct in this avatar's AnimatorController.");
             if (GUILayout.Button("Validate Animator Controller"))
             {
                 avaCryptRoot.ValidateAnimatorController();
             }
             EditorGUILayout.Space();
+            GUILayout.Label("Validate the AnimatorController, then create encrypted avatar.");
             if (GUILayout.Button("Encrypt Avatar"))
             {
                 avaCryptRoot.EncryptAvatar();

@@ -128,6 +128,7 @@ namespace GeoTetra.GTAvaCrypt
 
         private void Reset()
         {
+            // Start at 3 because 0 is kept to show unencrypted avatars normally.
             if (_key0 == 0) _key0 = Random.Range(3, 100);
             if (_key1 == 0) _key1 = Random.Range(3, 100);
             if (_key2 == 0) _key2 = Random.Range(3, 100);
@@ -140,11 +141,30 @@ namespace GeoTetra.GTAvaCrypt
             _key1 = RoundToThree(_key1);
             _key2 = RoundToThree(_key2);
             _key3 = RoundToThree(_key3);
+            
+            _key0 = Skip76(_key0);
+            _key1 = Skip76(_key1);
+            _key2 = Skip76(_key2);
+            _key3 = Skip76(_key3);
         }
 
         private int RoundToThree(int value)
         {
             return (value / 3) * 3 + 1;
+        }
+        
+        /// <summary>
+        /// This is super specific to current version of VRC.
+        /// There is a big which doesn't let you select 76 in radial menu, so skip it.
+        /// </summary>
+        private int Skip76(int value)
+        {
+            if (value == 76)
+            {
+                return value -= 3;
+            }
+
+            return value;
         }
 #endif
     }

@@ -113,6 +113,13 @@ namespace GeoTetra.GTAvaCrypt
                     Debug.Log($"Parameter already added: {keyName}");
                 }
             }
+
+            if (controller.parameters.Length > 16)
+            {
+                EditorUtility.DisplayDialog("More than 16 Parameters on Controller.", 
+                    "VRChat only supports 16 custom parameters, and more than 16 were detected on this controller, which means you probably need to delete some.", 
+                    "Ok");
+            }
         }
 
         public void ValidateLayers(AnimatorController controller)
