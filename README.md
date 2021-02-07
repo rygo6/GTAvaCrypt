@@ -17,7 +17,7 @@ Please take the time to understand the caveats of this system, as it does produc
 
 2. You must enter the four "AvaCrypt Keys" into the Avatar 3.0 puppeting menu. Meaning, this system can only work with avatars that use the VRChat Avatar 3.0 SDK. These four "AvaCrypt Keys" should be saved in the latest version of VRChat.
 
-3. Shaders must be manually edited to work with AvaCrypt. Currently there is a fork of PoiyomiToonShader which is maintained to work with AvaCrypt available here https://github.com/rygo6/GTPoiyomiToonShader. You must remove your existing versionf PoiyomiToonShader and only use this GTPoiyomiToonShader fork.
+3. Shaders must be manually edited to work with AvaCrypt. Currently there is a fork of PoiyomiToonShader which is maintained to work with AvaCrypt available here https://github.com/rygo6/GTPoiyomiToonShader. You must remove your existing version of PoiyomiToonShader and only use this GTPoiyomiToonShader fork.
 
   <i>If there are any other open-source shaders you would like edited to work with AvaCrypt, feel free to request it.</i>
 
