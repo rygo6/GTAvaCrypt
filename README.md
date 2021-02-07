@@ -51,7 +51,7 @@ Please take the time to understand the caveats of this system, as it does produc
 
 ![Step 5](Textures/DocSteps5.png)
 
-6. Ensure any meshes you wish to have encrypted use a shader that supports AvaCrypt. Currently the only shader which supports this is the edited version of PoiyomiToonShader included in this package, 'GTPoiyomiToonShader.unitypackage'.
+6. Ensure any meshes you wish to have encrypted use a shader that supports AvaCrypt. Currently the only shader which supports this is the fork of PoiyomiToonShader available here: https://github.com/rygo6/GTPoiyomiToonShader
 7. On the `AvaCryptRoot` component click the 'Encrypt Avatar' button. This will make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted.
 8. Go to the VRChat SDK Menu then 'Build and Publish' your avatar which has '_Encrypted' appended to the name.
 9. If this is the first time you have uploaded this avatar, after upload completes, go to the GameObject of your encrypted avatar. Find the `Pipeline Manager` component and copy it's blueprint ID. Then paste the blueprint ID into the `Pipeline Manager` on the un-encrypted avatar and click 'Attach'.
