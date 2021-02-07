@@ -15,11 +15,9 @@ Please take the time to understand the caveats of this system, as it does produc
 
 1. For a user to see your avatar properly in VRChat, they must have your avatar fully shown. Shaders, animations and all. So this system is only ideal for avatars you use in worlds where most people are your friends.
 
-2. You must enter the four "AvaCrypt Keys" into the Avatar 3.0 puppeting menu. Meaning, this system can only work with avatars that use the VRChat Avatar 3.0 SDK.
+2. You must enter the four "AvaCrypt Keys" into the Avatar 3.0 puppeting menu. Meaning, this system can only work with avatars that use the VRChat Avatar 3.0 SDK. These four "AvaCrypt Keys" should be saved in the latest version of VRChat.
 
-3. These four "AvaCrypt Keys" must be entered anytime you load into a new world, or re-load into your avatar. <b>UNLESS</b> you install 'emmvrc' which can save Avatar 3.0 parameters. You can install emmvrc from here: [emmvrc.com](https://www.thetrueyoshifan.com/emmvrc.php)
-
-4. Shaders must be manually edited to work with AvaCrypt. Currently there is a fork of PoiyomiToonShader which is maintained to work with AvaCrypt. It is included in the 'GTPoiyomiToonShader.unitypackage'
+3. Shaders must be manually edited to work with AvaCrypt. Currently there is a fork of PoiyomiToonShader which is maintained to work with AvaCrypt available here https://github.com/rygo6/GTPoiyomiToonShader. You must remove your existing versionf PoiyomiToonShader and only use this GTPoiyomiToonShader fork.
 
   <i>If there are any other open-source shaders you would like edited to work with AvaCrypt, feel free to request it.</i>
 
