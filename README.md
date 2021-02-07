@@ -1,7 +1,5 @@
 # GeoTetra AvaCrypt
 
-Thank you for purchasing the `GeoTetra AvacCrypt` avatar encryption system.
-
 This is probably the most comprehensive, and invasive, anti-avatar-ripping system that has been publicly released for VRChat. It will protect against your avatar being ripped, extracted and edited. It will also protect against your avatar being ripped, and reuploaded without edits.
 
 This system will randomize all the vertices of your avatar's mesh, then write that to disk. Then rely on a custom shader, with four decryption keys, to un-randomize the vertex positions in game. This is <b>not</b> done through blend shapes. Rather this will copy, and destructively edit, the 'Basis'' layer of your mesh.
