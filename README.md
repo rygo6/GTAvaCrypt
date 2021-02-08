@@ -36,7 +36,7 @@ First, select the FBX file of your Avatar in the Project Pane in the Unity Edito
 
 ![Steps 2to3](Textures/DocSteps2to3.png)
 
-4. In the 'Parameters' slot of your `VRCAvatarDescriptor` ensure you have an 'Expression Parameters' object with the following parameters to set to `Float`.
+4. In the 'Parameters' slot of your `VRCAvatarDescriptor` ensure you have an 'Expression Parameters' object with the following parameters set to `Float`.
   - AvaCryptKey0
   - AvaCryptKey1
   - AvaCryptKey2
