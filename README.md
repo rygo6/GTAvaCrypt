@@ -57,3 +57,6 @@ Please take the time to understand the caveats of this system, as it does produc
 7. On the `AvaCryptRoot` component click the 'Encrypt Avatar' button. This will make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted. Be aware your duplicated avatar with "_Encrypted" appended to it's name will appear completely garbled in the editor. This is what other users will see if they do not have your avatar shown. Do not set the keys on the material inside the Unity Editor, only set the keys in the Avatar 3.0 puppeting menu in VRChat.
 8. Go to the VRChat SDK Menu then 'Build and Publish' your avatar which has '_Encrypted' appended to the name.
 9. If this is the first time you have uploaded this avatar, after upload completes, go to the GameObject of your encrypted avatar. Find the `Pipeline Manager` component and copy it's blueprint ID. Then paste the blueprint ID into the `Pipeline Manager` on the un-encrypted avatar and click 'Attach'.
+
+If you have any more questions, or suggestions, feel free to join the GeoTetra discord:
+https://discord.gg/nbzqtaVP9J
