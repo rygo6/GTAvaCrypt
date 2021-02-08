@@ -25,7 +25,7 @@ Please take the time to understand the caveats of this system, as it does produc
 
 ## Usage Instructions
 
-#### Backup your poject before running these operation in case it causes diffucult to fix changes to your project. This is still alpha, a few users have reported issues with their particular avatar.
+#### <span style="color:red">Backup your poject before running these operations in case it doesn't work properly and causes diffucult to fix changes in your project. This is still alpha, a few users have reported that it does not work properly with their avatar mesh. If you find this to be the case with your avatar, join the [GeoTetra Discord](https://discord.gg/nbzqtaVP9J) and send me your avatar mesh if you are willing, then I will try to fix it.</span>
 
 1. Add the `AvaCryptRoot` component onto the root GameObject of your avatar, next to the `VRCAvatarDescriptor` component. Take note of the four "Key" values which are shown in this component, these are the values you must enter into your Avatar 3.0 puppeting menu.
 2. Ensure your `VRCAvatarDescriptor` has an AnimatorController specified in the 'FX Playable Layer' slot. <b>The AnimatorController you specify should not be shared between multiple avatars, AvaCrypt is going to write states into the controller which will need to be different for different avatars.</b>
