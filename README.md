@@ -29,6 +29,7 @@ Please take the time to understand the caveats of this system, as it does produc
 4. Ensure there is also an `Animator` component on this root GameObject, and that its 'Controller' slot points to the same AnimatorController in the 'FX Playable Layer' slot on the `VRCAvatarDescriptor`.
 
 ![Steps 1](Textures/DocSteps1.png)
+
 ![Steps 1](Textures/DocSteps2to3.png)
 
 5. In the 'Parameters' slot of your `VRCAvatarDescriptor` ensure you have an 'Expression Parameters' object with the following parameters to set to `Float`.
