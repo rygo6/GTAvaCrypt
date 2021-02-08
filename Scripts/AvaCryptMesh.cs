@@ -44,8 +44,26 @@ namespace GeoTetra.GTAvaCrypt
             }
 
             string existingMeshPath = AssetDatabase.GetAssetPath(mesh);
+            string obfuscatedMeshPath = null;
             Debug.Log($"Existing Mesh Path {existingMeshPath} {mesh}");
-            string obfuscatedMeshPath = existingMeshPath.Replace(".fbx", $"_{mesh}_Encrypted.asset");
+            if (existingMeshPath.Contains(".fbx"))
+            {
+                obfuscatedMeshPath = existingMeshPath.Replace(".fbx", $"_{mesh}_Encrypted.asset");
+            }
+            else if (existingMeshPath.Contains(".asset"))
+            {
+                obfuscatedMeshPath = existingMeshPath.Replace(".asset", $"_{mesh}_Encrypted.asset");
+            }
+            else if (existingMeshPath.Contains(".obj"))
+            {
+                obfuscatedMeshPath = existingMeshPath.Replace(".obj", $"_{mesh}_Encrypted.asset");
+            }
+            else
+            {
+                Debug.LogWarning("Mesh file type not known?");
+                return null;
+            }
+
             Debug.Log($"Obfuscated Mesh Path {obfuscatedMeshPath}");
 
             Mesh newMesh = new Mesh
