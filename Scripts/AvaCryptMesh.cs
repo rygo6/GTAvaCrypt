@@ -60,8 +60,8 @@ namespace GeoTetra.GTAvaCrypt
             Debug.Log($"Existing Mesh Path For {mesh.name} Is {existingMeshPath}");
 
             //Do Not Care What File Type The Mesh Is, Attempt Anyway.
-            //The string.Empty Is A Fallback Value If Null, Which Should Not Happen.
-            var obfuscatedMeshPath = Path.Combine(Path.GetDirectoryName(existingMeshPath) ?? string.Empty, Path.GetFileNameWithoutExtension(existingMeshPath)) + $"_{mesh.name}_Encrypted.asset";
+            //The string.Empty Is A Fallback Value If Null, Which Should Not Happen - But If It Does, It Would Then Use Enviroment.CurrentDirectory Via Inheritance.
+            var obfuscatedMeshPath = Path.GetDirectoryName(existingMeshPath) != null ? (Path.Combine(Path.GetDirectoryName(existingMeshPath), Path.GetFileNameWithoutExtension(existingMeshPath)) + $"_{mesh.name}_Encrypted.asset") : (Path.GetFileNameWithoutExtension(existingMeshPath) +$"_{mesh.name}_Encrypted.asset");
 
             Debug.Log($"Obfuscated Mesh Path {obfuscatedMeshPath}");
 
