@@ -35,7 +35,7 @@ namespace GeoTetra.GTAvaCrypt
             var minRange = maxDistance * -distortRatio;
             const float maxRange = 0;
 
-            for (var v = 0; v < newVertices.Length; ++v)
+            for (var v = 0; v < newVertices.Length; v++)
             {
                 uv7Offsets[v].x = Random.Range(minRange, maxRange);
                 uv7Offsets[v].y = Random.Range(minRange, maxRange);
@@ -85,7 +85,7 @@ namespace GeoTetra.GTAvaCrypt
             };
 
             // transfer sub meshes
-            for (var meshIndex = 0; meshIndex < mesh.subMeshCount; ++meshIndex)
+            for (var meshIndex = 0; meshIndex < mesh.subMeshCount; meshIndex++)
             {
                 var triangles = mesh.GetTriangles(meshIndex);
 
@@ -95,7 +95,7 @@ namespace GeoTetra.GTAvaCrypt
             // transfer blend shapes
             for (int shapeIndex = 0; shapeIndex < mesh.blendShapeCount; ++shapeIndex)
             {
-                for (var frameIndex = 0; frameIndex < mesh.GetBlendShapeFrameCount(shapeIndex); ++frameIndex)
+                for (var frameIndex = 0; frameIndex < mesh.GetBlendShapeFrameCount(shapeIndex); frameIndex++)
                 {
                     var deltaVertices = new Vector3[newVertices.Length];
                     var deltaNormals = new Vector3[newVertices.Length];
