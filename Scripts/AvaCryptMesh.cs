@@ -9,7 +9,7 @@ namespace GeoTetra.GTAvaCrypt
     {
         public Mesh EncryptMesh(Mesh mesh, float key0, float key1, float key2, float key3, float distortRatio)
         {
-            if (mesh == null)
+            if (mesh == null || !mesh.isReadable)
             {
                 return null;
             }
@@ -51,7 +51,7 @@ namespace GeoTetra.GTAvaCrypt
 
             var existingMeshPath = AssetDatabase.GetAssetPath(mesh);
 
-            if (string.IsNullOrEmpty(existingMeshPath))
+            if (string.IsNullOrEmpty(existingMeshPath) || existingMeshPath.Contains("unity default resources"))
             {
                 Debug.LogError("Asset For Mesh Not Found Or Invalid!");
                 return null;
@@ -60,10 +60,10 @@ namespace GeoTetra.GTAvaCrypt
             Debug.Log($"Existing Mesh Path For {mesh.name} Is {existingMeshPath}");
 
             //Do Not Care What File Type The Mesh Is, Attempt Anyway.
-            //The string.Empty Is A Fallback Value If Null, Which Should Not Happen - But If It Does, It Would Then Use Enviroment.CurrentDirectory Via Inheritance.
-            var obfuscatedMeshPath = Path.GetDirectoryName(existingMeshPath) != null ? (Path.Combine(Path.GetDirectoryName(existingMeshPath), Path.GetFileNameWithoutExtension(existingMeshPath)) + $"_{mesh.name}_Encrypted.asset") : (Path.GetFileNameWithoutExtension(existingMeshPath) +$"_{mesh.name}_Encrypted.asset");
+            //The Inline If Statement Is A Fallback Check, It Gets The Path Combined With The Filename Without Extension With Our Own Extension, If The Path Is Null, It Would Then Use Enviroment.CurrentDirectory Via Inheritance As The Path.
+            var encryptedMeshPath = Path.GetDirectoryName(existingMeshPath) != null ? (Path.Combine(Path.GetDirectoryName(existingMeshPath), Path.GetFileNameWithoutExtension(existingMeshPath)) + $"_{mesh.name}_Encrypted.asset") : (Path.GetFileNameWithoutExtension(existingMeshPath) +$"_{mesh.name}_Encrypted.asset");
 
-            Debug.Log($"Obfuscated Mesh Path {obfuscatedMeshPath}");
+            Debug.Log($"Encrypted Mesh Path {encryptedMeshPath}");
 
             var newMesh = new Mesh
             {
@@ -110,7 +110,7 @@ namespace GeoTetra.GTAvaCrypt
                 }
             }
 
-            AssetDatabase.CreateAsset(newMesh, obfuscatedMeshPath);
+            AssetDatabase.CreateAsset(newMesh, encryptedMeshPath);
             AssetDatabase.SaveAssets();
 
             return newMesh;
