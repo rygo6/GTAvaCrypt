@@ -53,7 +53,7 @@ namespace GeoTetra.GTAvaCrypt
 
             if (string.IsNullOrEmpty(existingMeshPath) || existingMeshPath.Contains("unity default resources"))
             {
-                Debug.LogError("Asset For Mesh Not Found Or Invalid!");
+                Debug.LogError("Asset For Mesh Not Found, Invalid Or Is A Built In Unity Mesh!");
                 return null;
             }
 
