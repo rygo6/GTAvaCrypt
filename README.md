@@ -5,7 +5,7 @@ This is probably the most comprehensive, and invasive, anti-avatar-ripping syste
 This system will randomize all the vertices of your avatar's mesh, then write that to disk. Then rely on a custom shader, with four decryption keys, to un-randomize the vertex positions in game. This is <b>not</b> done through blend shapes. Rather this will copy, and destructively edit, the 'Basis'' layer of your mesh.
 
 ## Understand no encryption system is 100% secure.
-<b>If someone is committed they can still rip your avatar. Nothing will be able to protect your assets 100% for certain. However, with AvaCrypt it would take a knowledgeable Software Engineer multiple days to rip your avatar.</b>
+<b>If someone is committed they can still rip your avatar. Nothing will be able to protect your assets 100% for certain. However, with AvaCrypt it would take a knowledgeable Software Engineer multiple days to rip your avatar. It's also possible someone could use a mod to read your four decryption keys if you are in the same world as them.</b>
 
 ## Caveats of this System
 
