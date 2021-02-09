@@ -93,7 +93,7 @@ namespace GeoTetra.GTAvaCrypt
             }
 
             // transfer blend shapes
-            for (int shapeIndex = 0; shapeIndex < mesh.blendShapeCount; ++shapeIndex)
+            for (int shapeIndex = 0; shapeIndex < mesh.blendShapeCount; shapeIndex++)
             {
                 for (var frameIndex = 0; frameIndex < mesh.GetBlendShapeFrameCount(shapeIndex); frameIndex++)
                 {
