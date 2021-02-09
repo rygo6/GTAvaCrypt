@@ -21,7 +21,7 @@ Please take the time to understand the caveats of this system, as it does produc
 
 ## Usage Instructions
 
-# *** Backup your project before running these operations in case it doesn't work properly and causes diffucult to fix changes in your project. ***
+# *** Backup your project before running these operations in case it doesn't work properly and causes difficult or impossible to fix changes in your project. ***
 ### This is still alpha, a few users have reported that it does not work properly with their avatar mesh. If you find this to be the case with your avatar, join the [GeoTetra Discord](https://discord.gg/nbzqtaVP9J) and send me your avatar mesh if you are willing, then I will try to fix it.</span>
 
 First, select the FBX file of your Avatar in the Project Pane in the Unity Editor. View the FBX file's "Import Settings" in the Inspector Pane, in here set "Normals" to "Import". This may not always be necessary, but I found it was for my avatars. If your avatar mesh is a .Asset rather than a .FBX, this may not work, I have not tested it heavily with .Asset mesh sources.
