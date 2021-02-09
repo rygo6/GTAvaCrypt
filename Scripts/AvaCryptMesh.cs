@@ -57,13 +57,11 @@ namespace GeoTetra.GTAvaCrypt
                 return null;
             }
 
-            Debug.Log($"Existing Mesh Path {existingMeshPath} {mesh}");
+            Debug.Log($"Existing Mesh Path For {mesh.name} Is {existingMeshPath}");
 
             //Do Not Care What File Type The Mesh Is, Attempt Anyway.
             //The string.Empty Is A Fallback Value If Null, Which Should Not Happen.
             var obfuscatedMeshPath = Path.Combine(Path.GetDirectoryName(existingMeshPath) ?? string.Empty, Path.GetFileNameWithoutExtension(existingMeshPath)) + $"_{mesh.name}_Encrypted.asset";
-
-            
 
             Debug.Log($"Obfuscated Mesh Path {obfuscatedMeshPath}");
 
