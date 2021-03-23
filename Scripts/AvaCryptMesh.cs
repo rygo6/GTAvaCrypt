@@ -6,7 +6,7 @@ namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptMesh
     {
-        public Mesh EncryptMesh(Mesh mesh, float key0, float key1, float key2, float key3, float distortRatio)
+        public Mesh EncryptMesh(Mesh mesh, float distortRatio, int[] keys)
         {
             if (mesh == null) return null;
             
@@ -15,15 +15,19 @@ namespace GeoTetra.GTAvaCrypt
             Vector2[] uv7Offsets = new Vector2[newVertices.Length];
             Vector2[] uv8Offsets = new Vector2[newVertices.Length];
 
-            float floatKey0 = (float)key0 * 1f;
-            float floatKey1 = (float)key1 * 2f;
-            float floatKey2 = (float)key2 * 3f;
-            float floatKey3 = (float)key3 * 4f;
+            float[] floatKeys = new float[keys.Length];
+
+            for (int i = 0; i < keys.Length; ++i)
+            {
+                floatKeys[i] = (float)keys[i] * ((float)i + 1f);
+            }
             
-            float comKey0 = Mathf.Sin((floatKey2 - floatKey1) * 2f) * Mathf.Cos(floatKey3 - floatKey0);
-            float comKey1 = Mathf.Sin((floatKey3 - floatKey0) * 3f) * Mathf.Cos(floatKey2 - floatKey1);
-            float comKey2 = Mathf.Sin((floatKey0 - floatKey3) * 4f) * Mathf.Cos(floatKey1 - floatKey2);
-            float comKey3 = Mathf.Sin((floatKey1 - floatKey2) * 5f) * Mathf.Cos(floatKey0 - floatKey3);
+            float comKey0 = Mathf.Sin((floatKeys[0] - floatKeys[5]) * 1.5f) * Mathf.Cos(floatKeys[2] - floatKeys[3]);
+            float comKey1 = Mathf.Sin((floatKeys[1] - floatKeys[4]) * 2.0f) * Mathf.Cos(floatKeys[1] - floatKeys[4]);
+            float comKey2 = Mathf.Sin((floatKeys[2] - floatKeys[3]) * 2.5f) * Mathf.Cos(floatKeys[0] - floatKeys[5]);
+            float comKey3 = Mathf.Sin((floatKeys[3] - floatKeys[2]) * 3.0f) * Mathf.Cos(floatKeys[5] - floatKeys[0]);
+            float comKey4 = Mathf.Sin((floatKeys[4] - floatKeys[1]) * 3.5f) * Mathf.Cos(floatKeys[4] - floatKeys[1]);
+            float comKey5 = Mathf.Sin((floatKeys[5] - floatKeys[0]) * 4.0f) * Mathf.Cos(floatKeys[3] - floatKeys[2]);
 
             float maxDistance = mesh.bounds.max.magnitude - mesh.bounds.min.magnitude;
 
@@ -39,8 +43,10 @@ namespace GeoTetra.GTAvaCrypt
 
                 newVertices[v] += normals[v] * uv7Offsets[v].x * comKey0;
                 newVertices[v] += normals[v] * uv7Offsets[v].y * comKey1;
-                newVertices[v] += normals[v] * uv8Offsets[v].x * comKey2;
+                newVertices[v] += normals[v] * uv7Offsets[v].x * comKey2;
                 newVertices[v] += normals[v] * uv8Offsets[v].y * comKey3;
+                newVertices[v] += normals[v] * uv8Offsets[v].x * comKey4;
+                newVertices[v] += normals[v] * uv8Offsets[v].y * comKey5;
             }
 
             string existingMeshPath = AssetDatabase.GetAssetPath(mesh);

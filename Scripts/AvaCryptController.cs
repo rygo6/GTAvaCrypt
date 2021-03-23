@@ -13,12 +13,24 @@ namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptController
     {
-        private readonly string[] AvaCryptKeyNames = {"AvaCryptKey0", "AvaCryptKey1", "AvaCryptKey2", "AvaCryptKey3"};
-        private readonly AnimationClip[] _clips0 = new AnimationClip[4];
-        private readonly AnimationClip[] _clips100 = new AnimationClip[4];
+        private string[] AvaCryptKeyNames = {"AvaCryptKey0", "AvaCryptKey1", "AvaCryptKey2", "AvaCryptKey3"};
+        private AnimationClip[] _clips0 = new AnimationClip[4];
+        private AnimationClip[] _clips100 = new AnimationClip[4];
 
         private const string StateMachineName = "AvaCryptKey{0} State Machine";
         private const string BlendTreeName = "AvaCryptKey{0} Blend Tree";
+
+        public void InitializeCount(int count)
+        {
+            _clips0 = new AnimationClip[count];
+            _clips100 = new AnimationClip[count];
+            AvaCryptKeyNames = new string[count];
+            
+            for (int i = 0; i < count; ++i)
+            {
+                AvaCryptKeyNames[i] = $"AvaCryptKey{i}";
+            }
+        }
         
         public void ValidateAnimations(GameObject gameObject, AnimatorController controller)
         {

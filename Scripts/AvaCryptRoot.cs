@@ -14,24 +14,11 @@ namespace GeoTetra.GTAvaCrypt
         [Header("Higher value causes more distortion. Default = .02")]
         [Range(.005f, .2f)]
         [SerializeField] 
-        private float _distortRatio = .02f;
-        
-        [Header("The four values which must be entered in game to display the model.")]
-        [Range(3, 100)]
+        private float _distortRatio = .04f;
+
+        [Range(0, 100)] 
         [SerializeField] 
-        private int _key0;
-        
-        [Range(3, 100)]
-        [SerializeField] 
-        private int _key1;
-        
-        [Range(3, 100)]
-        [SerializeField] 
-        private int _key2;
-        
-        [Range(3, 100)]
-        [SerializeField] 
-        private int _key3;
+        private int[] _keys = new int[6];
 
         #if UNITY_EDITOR
         private readonly AvaCryptController _avaCryptController = new AvaCryptController();
@@ -41,6 +28,7 @@ namespace GeoTetra.GTAvaCrypt
         {
             AnimatorController controller = GetAnimatorController();
 
+            _avaCryptController.InitializeCount(_keys.Length);
             _avaCryptController.ValidateAnimations(gameObject, controller);
             _avaCryptController.ValidateParameters(controller);
             _avaCryptController.ValidateLayers(controller);
@@ -107,13 +95,13 @@ namespace GeoTetra.GTAvaCrypt
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
             {
-                meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _key0, _key1, _key2, _key3, _distortRatio);
+                meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, _keys);
             }
             
             SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _key0, _key1, _key2, _key3, _distortRatio);
+                skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _keys);
             }
             
             AvaCryptRoot[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptRoot>();
@@ -129,27 +117,26 @@ namespace GeoTetra.GTAvaCrypt
         private void Reset()
         {
             // Start at 3 because 0 is kept to show unencrypted avatars normally.
-            if (_key0 == 0) _key0 = Random.Range(3, 100);
-            if (_key1 == 0) _key1 = Random.Range(3, 100);
-            if (_key2 == 0) _key2 = Random.Range(3, 100);
-            if (_key3 == 0) _key3 = Random.Range(3, 100);
+            for (int i = 0; i < _keys.Length; ++i)
+            {
+                if (_keys[i] == 0) _keys[i] = Random.Range(3, 100);
+            }
         }
 
         private void OnValidate()
         {
-            _key0 = RoundToThree(_key0);
-            _key1 = RoundToThree(_key1);
-            _key2 = RoundToThree(_key2);
-            _key3 = RoundToThree(_key3);
-            
-            _key0 = Skip76(_key0);
-            _key1 = Skip76(_key1);
-            _key2 = Skip76(_key2);
-            _key3 = Skip76(_key3);
+            for (int i = 0; i < _keys.Length; ++i)
+            {
+                _keys[i] = RoundToThree(_keys[i]);
+                _keys[i] = Skip76(_keys[i]);
+            }
         }
 
         private int RoundToThree(int value)
         {
+            // allow 0 someone can disable a key
+            if (value == 0) return 0;
+            if (value < 4) return 4;
             return (value / 3) * 3 + 1;
         }
         

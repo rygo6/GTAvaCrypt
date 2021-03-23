@@ -57,3 +57,25 @@ MonoBehaviour:
     subParameters:
     - name: AvaCryptKey3
     labels: []
+  - name: Key4
+    icon: {fileID: 0}
+    type: 203
+    parameter:
+      name: 
+    value: 1
+    style: 0
+    subMenu: {fileID: 0}
+    subParameters:
+    - name: AvaCryptKey4
+    labels: []
+  - name: Key5
+    icon: {fileID: 0}
+    type: 203
+    parameter:
+      name: 
+    value: 1
+    style: 0
+    subMenu: {fileID: 0}
+    subParameters:
+    - name: AvaCryptKey5
+    labels: []
