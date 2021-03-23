@@ -19,15 +19,15 @@ namespace GeoTetra.GTAvaCrypt
 
             for (int i = 0; i < keys.Length; ++i)
             {
-                floatKeys[i] = (float)keys[i] * ((float)i + 1f);
+                floatKeys[i] = (float)keys[i] * ((((float)i + 1f) * .234567f) + 1f);
             }
-            
-            float comKey0 = Mathf.Sin((floatKeys[0] - floatKeys[5]) * 1.5f) * Mathf.Cos(floatKeys[2] - floatKeys[3]);
-            float comKey1 = Mathf.Sin((floatKeys[1] - floatKeys[4]) * 2.0f) * Mathf.Cos(floatKeys[1] - floatKeys[4]);
-            float comKey2 = Mathf.Sin((floatKeys[2] - floatKeys[3]) * 2.5f) * Mathf.Cos(floatKeys[0] - floatKeys[5]);
-            float comKey3 = Mathf.Sin((floatKeys[3] - floatKeys[2]) * 3.0f) * Mathf.Cos(floatKeys[5] - floatKeys[0]);
-            float comKey4 = Mathf.Sin((floatKeys[4] - floatKeys[1]) * 3.5f) * Mathf.Cos(floatKeys[4] - floatKeys[1]);
-            float comKey5 = Mathf.Sin((floatKeys[5] - floatKeys[0]) * 4.0f) * Mathf.Cos(floatKeys[3] - floatKeys[2]);
+
+            float comKey0 = Mathf.Sin((floatKeys[0] - floatKeys[5]) * 0.234567f) * Mathf.Cos(floatKeys[2] - floatKeys[3]);
+            float comKey1 = Mathf.Sin((floatKeys[1] - floatKeys[4]) * 0.469134f) * Mathf.Cos(floatKeys[1] - floatKeys[4]);
+            float comKey2 = Mathf.Sin((floatKeys[2] - floatKeys[3]) * 0.703701f) * Mathf.Cos(floatKeys[0] - floatKeys[5]);
+            float comKey3 = Mathf.Sin((floatKeys[3] - floatKeys[2]) * 0.938268f) * Mathf.Cos(floatKeys[5] - floatKeys[0]);
+            float comKey4 = Mathf.Sin((floatKeys[4] - floatKeys[1]) * 1.172835f) * Mathf.Cos(floatKeys[4] - floatKeys[1]);
+            float comKey5 = Mathf.Sin((floatKeys[5] - floatKeys[0]) * 1.407402f) * Mathf.Cos(floatKeys[3] - floatKeys[2]);
 
             float maxDistance = mesh.bounds.max.magnitude - mesh.bounds.min.magnitude;
 
