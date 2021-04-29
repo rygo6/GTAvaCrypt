@@ -111,7 +111,7 @@ namespace GeoTetra.GTAvaCrypt
             encodedGameObject.name = newName;
             encodedGameObject.SetActive(true);
 
-            MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
+            MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>(true);
             foreach (MeshFilter meshFilter in meshFilters)
             {
                 if (meshFilter.GetComponent<MeshRenderer>() != null)
@@ -129,7 +129,7 @@ namespace GeoTetra.GTAvaCrypt
                 }
             }
 
-            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
                 var Materials = skinnedMeshRenderer.sharedMaterials;
@@ -144,7 +144,7 @@ namespace GeoTetra.GTAvaCrypt
                 }
             }
 
-            AvaCryptRoot[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptRoot>();
+            AvaCryptRoot[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptRoot>(true);
             foreach (AvaCryptRoot avaCryptRoot in avaCryptRoots)
             {
                 DestroyImmediate(avaCryptRoot);
