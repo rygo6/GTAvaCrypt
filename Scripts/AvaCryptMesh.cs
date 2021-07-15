@@ -197,6 +197,12 @@ namespace GeoTetra.GTAvaCrypt
 
             float4 modelDecode(float4 vertex, float3 normal, float2 uv0, float2 uv1)
             {
+                // if key is 0 don't apply
+                if (_Key0 == 0)
+                {
+                    return vertex;
+                }
+
                 // add .5 to fix odd offset from vrc parameter sync
                 float key0 = ((int)(_Key0 + .5));
                 float key1 = ((int)(_Key1 + .5));
@@ -205,18 +211,13 @@ namespace GeoTetra.GTAvaCrypt
                 float key4 = ((int)(_Key4 + .5));
                 float key5 = ((int)(_Key5 + .5));
 
-                // if key is 0, allow it to be as such, so it can render nor-crypted avatars correctly
-                // by setting the keys to 0 on the shader
-                if (key0 > 0)
-                {
-                    // round to three to minimize potential of parameter off sync
-                    key0 = ((int)(key0 / 3)) * 3 + 1;
-                    key1 = ((int)(key1 / 3)) * 3 + 1;
-                    key2 = ((int)(key2 / 3)) * 3 + 1;
-                    key3 = ((int)(key3 / 3)) * 3 + 1;
-                    key4 = ((int)(key4 / 3)) * 3 + 1;
-                    key5 = ((int)(key5 / 3)) * 3 + 1;
-                }
+                // round to three to minimize potential of parameter off sync
+                key0 = ((int)(key0 / 3)) * 3 + 1;
+                key1 = ((int)(key1 / 3)) * 3 + 1;
+                key2 = ((int)(key2 / 3)) * 3 + 1;
+                key3 = ((int)(key3 / 3)) * 3 + 1;
+                key4 = ((int)(key4 / 3)) * 3 + 1;
+                key5 = ((int)(key5 / 3)) * 3 + 1;
 
                 // AvaCrypt Randomly Generated Begin:
                 ";
