@@ -96,6 +96,8 @@ namespace GeoTetra.GTAvaCrypt
             encodedGameObject.name = newName;
             encodedGameObject.SetActive(true);
             
+            _avaCryptMesh.InitializeRandoms(_keynames.Length);
+            
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
             {
