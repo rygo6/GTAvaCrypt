@@ -40,8 +40,8 @@ namespace GeoTetra.GTAvaCrypt
                 for (int i = 0; i < _clips0.Length; ++i)
                 {
                     string transformPath = AnimationUtility.CalculateTransformPath(meshRenderer.transform, gameObject.transform);
-                    _clips0[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 0)));
-                    _clips100[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 100)));
+                    _clips0[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 0)));
+                    _clips100[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 100)));
                 }
             }
             
@@ -51,8 +51,8 @@ namespace GeoTetra.GTAvaCrypt
                 for (int i = 0; i < _clips0.Length; ++i)
                 {
                     string transformPath = AnimationUtility.CalculateTransformPath(skinnedMeshRenderer.transform,gameObject.transform);
-                    _clips0[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 0)));
-                    _clips100[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 100)));
+                    _clips0[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 0)));
+                    _clips100[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 100)));
                 }
             }
             
