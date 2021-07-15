@@ -13,28 +13,23 @@ namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptController
     {
-        private string[] AvaCryptKeyNames = {"AvaCryptKey0", "AvaCryptKey1", "AvaCryptKey2", "AvaCryptKey3"};
-        private AnimationClip[] _clips0 = new AnimationClip[4];
-        private AnimationClip[] _clips100 = new AnimationClip[4];
+        private string[] _avaCryptKeyNames;
+        private AnimationClip[] _clips0;
+        private AnimationClip[] _clips100;
 
         private const string StateMachineName = "AvaCryptKey{0} State Machine";
         private const string BlendTreeName = "AvaCryptKey{0} Blend Tree";
 
-        public void InitializeCount(int count)
+        public void InitializeCount(string[] keynames)
         {
-            _clips0 = new AnimationClip[count];
-            _clips100 = new AnimationClip[count];
-            AvaCryptKeyNames = new string[count];
-            
-            for (int i = 0; i < count; ++i)
-            {
-                AvaCryptKeyNames[i] = $"AvaCryptKey{i}";
-            }
+            _clips0 = new AnimationClip[keynames.Length];
+            _clips100 = new AnimationClip[keynames.Length];
+            _avaCryptKeyNames = keynames;
         }
         
         public void ValidateAnimations(GameObject gameObject, AnimatorController controller)
         {
-            for (int i = 0; i < AvaCryptKeyNames.Length; ++i)
+            for (int i = 0; i < _avaCryptKeyNames.Length; ++i)
             {
                 ValidateClip(gameObject, controller, i);
             }
@@ -45,8 +40,8 @@ namespace GeoTetra.GTAvaCrypt
                 for (int i = 0; i < _clips0.Length; ++i)
                 {
                     string transformPath = AnimationUtility.CalculateTransformPath(meshRenderer.transform, gameObject.transform);
-                    _clips0[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 0)));
-                    _clips100[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 100)));
+                    _clips0[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 0)));
+                    _clips100[i].SetCurve(transformPath, typeof(MeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 100)));
                 }
             }
             
@@ -56,8 +51,8 @@ namespace GeoTetra.GTAvaCrypt
                 for (int i = 0; i < _clips0.Length; ++i)
                 {
                     string transformPath = AnimationUtility.CalculateTransformPath(skinnedMeshRenderer.transform,gameObject.transform);
-                    _clips0[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 0)));
-                    _clips100[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._Key{i}", new AnimationCurve(new Keyframe(0, 100)));
+                    _clips0[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 0)));
+                    _clips100[i].SetCurve(transformPath, typeof(SkinnedMeshRenderer), $"material._{_avaCryptKeyNames[i]}", new AnimationCurve(new Keyframe(0, 100)));
                 }
             }
             
@@ -69,7 +64,7 @@ namespace GeoTetra.GTAvaCrypt
             string controllerPath = AssetDatabase.GetAssetPath(controller);
             string controllerFileName = System.IO.Path.GetFileName(controllerPath);
             
-            string clipName = $"{gameObject.name}_{AvaCryptKeyNames[index]}";
+            string clipName = $"{gameObject.name}_{_avaCryptKeyNames[index]}";
             string clipName0 = $"{clipName}_0";
             string clipName0File = $"{clipName0}.anim";
             string clipName100 = $"{clipName}_100";
@@ -112,7 +107,7 @@ namespace GeoTetra.GTAvaCrypt
         
         public void ValidateParameters(AnimatorController controller)
         {
-            foreach (string keyName in AvaCryptKeyNames)
+            foreach (string keyName in _avaCryptKeyNames)
             {
                 if (controller.parameters.All(parameter => parameter.name != keyName))
                 {
@@ -136,16 +131,16 @@ namespace GeoTetra.GTAvaCrypt
 
         public void ValidateLayers(AnimatorController controller)
         {
-            for (int i = 0; i < AvaCryptKeyNames.Length; ++i)
+            for (int i = 0; i < _avaCryptKeyNames.Length; ++i)
             {
-                if (controller.layers.All(l => l.name != AvaCryptKeyNames[i]))
+                if (controller.layers.All(l => l.name != _avaCryptKeyNames[i]))
                 {
                     CreateLayer(i, controller);
                 }
                 else
                 {
-                    Debug.Log($"Layer already existing: {AvaCryptKeyNames[i]}");
-                    AnimatorControllerLayer layer = controller.layers.FirstOrDefault(l => l.name == AvaCryptKeyNames[i]);
+                    Debug.Log($"Layer already existing: {_avaCryptKeyNames[i]}");
+                    AnimatorControllerLayer layer = controller.layers.FirstOrDefault(l => l.name == _avaCryptKeyNames[i]);
 
                     if (layer.stateMachine == null)
                     {
@@ -202,13 +197,13 @@ namespace GeoTetra.GTAvaCrypt
 
         private void CreateLayer(int index, AnimatorController controller)
         {
-            Debug.Log($"Creating layer: {AvaCryptKeyNames[index]}");
+            Debug.Log($"Creating layer: {_avaCryptKeyNames[index]}");
             
             string controllerPath = AssetDatabase.GetAssetPath(controller);
             
             AnimatorControllerLayer layer = new AnimatorControllerLayer
             {
-                name = AvaCryptKeyNames[index],
+                name = _avaCryptKeyNames[index],
                 defaultWeight = 1,
                 stateMachine = new AnimatorStateMachine(),
             };
@@ -233,7 +228,7 @@ namespace GeoTetra.GTAvaCrypt
             {
                 name = blendTreeName,
                 blendType = BlendTreeType.Simple1D,
-                blendParameter = AvaCryptKeyNames[index],
+                blendParameter = _avaCryptKeyNames[index],
             };
             
             ChildMotion childMotion0 = new ChildMotion
@@ -252,6 +247,15 @@ namespace GeoTetra.GTAvaCrypt
             AssetDatabase.AddObjectToAsset(blendTree, controllerPath);
             
             AssetDatabase.SaveAssets();
+        }
+        
+        public void CleanupBlendTrees(AnimatorController controller)
+        {
+            for (int i = 0; i < _avaCryptKeyNames.Length; ++i)
+            {
+                DeleteObjectFromController(controller, string.Format(StateMachineName, i));
+                DeleteObjectFromController(controller, string.Format(BlendTreeName, i));
+            }
         }
 
         private void DeleteObjectFromController(AnimatorController controller, string name)

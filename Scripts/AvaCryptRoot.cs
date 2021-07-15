@@ -11,6 +11,10 @@ namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptRoot : MonoBehaviour
     {
+        [Header("Key Names")]
+        [SerializeField]
+        private string[] _keynames = new string[6];
+    
         [Header("Higher value causes more distortion. Default = .02")]
         [Range(.005f, .2f)]
         [SerializeField] 
@@ -23,12 +27,12 @@ namespace GeoTetra.GTAvaCrypt
         #if UNITY_EDITOR
         private readonly AvaCryptController _avaCryptController = new AvaCryptController();
         private readonly AvaCryptMesh _avaCryptMesh = new AvaCryptMesh();
-        
+
         public void ValidateAnimatorController()
         {
             AnimatorController controller = GetAnimatorController();
 
-            _avaCryptController.InitializeCount(_keys.Length);
+            _avaCryptController.InitializeCount(_keynames);
             _avaCryptController.ValidateAnimations(gameObject, controller);
             _avaCryptController.ValidateParameters(controller);
             _avaCryptController.ValidateLayers(controller);
@@ -121,6 +125,11 @@ namespace GeoTetra.GTAvaCrypt
             {
                 if (_keys[i] == 0) _keys[i] = Random.Range(3, 100);
             }
+            
+            for (int i = 0; i < _keynames.Length; ++i)
+            {
+                _keynames[i] = $"RENAME ME - Key {i}";
+            }
         }
 
         private void OnValidate()
@@ -152,6 +161,13 @@ namespace GeoTetra.GTAvaCrypt
             }
 
             return value;
+        }
+
+        [ContextMenu("CleanupBlendTrees")]
+        private void CleanupBlendTrees()
+        {
+            _avaCryptController.InitializeCount(_keynames);
+            _avaCryptController.CleanupBlendTrees(GetAnimatorController());
         }
 #endif
     }
