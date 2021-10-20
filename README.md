@@ -1,3 +1,8 @@
+The official root repository for this project is here https://github.com/rygo6/GTAvaCrypt. Be sure you are downloading it only from there.
+
+Be careful to not download code from forked repositories unless you trust the fork. People can fork repositories and add malicious code without the original author having any control or knowledge of it.
+
+
 # GeoTetra AvaCrypt
 
 This is probably the most invasive, anti-avatar-ripping system that has been publicly released for VRChat. It will protect against your avatar being ripped, extracted and edited. It will also protect against your avatar being ripped, and reuploaded without edits.
