@@ -186,8 +186,35 @@ namespace GeoTetra.GTAvaCrypt
 
             return newMesh;
         }
-
+        
         private const string ModelShaderDecodeFirst =
+            @"float _Key0;
+            float _Key1;
+            float _Key2;
+            float _Key3;
+            float _Key4;
+            float _Key5;
+
+            float4 modelDecode(float4 vertex, float3 normal, float2 uv0, float2 uv1)
+            {
+                // if key is 0 don't apply
+                if (_Key0 == 0)
+                {
+                    return vertex;
+                }
+
+                // add .5 to fix odd offset from vrc parameter sync
+                float key0 = ((int)(_Key0 + .5));
+                float key1 = ((int)(_Key1 + .5));
+                float key2 = ((int)(_Key2 + .5));
+                float key3 = ((int)(_Key3 + .5));
+                float key4 = ((int)(_Key4 + .5));
+                float key5 = ((int)(_Key5 + .5));
+
+                // AvaCrypt Randomly Generated Begin:
+                ";
+
+        private const string ModelShaderDecodeFirstThirdAveraged =
             @"float _Key0;
             float _Key1;
             float _Key2;
@@ -221,6 +248,7 @@ namespace GeoTetra.GTAvaCrypt
 
                 // AvaCrypt Randomly Generated Begin:
                 ";
+        
         private const string ModelShaderDecodeSecond =
             @"  // AvaCrypt Randomly Generated End:
                

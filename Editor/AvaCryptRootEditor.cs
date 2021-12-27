@@ -3,39 +3,41 @@ using UnityEngine;
 
 namespace GeoTetra.GTAvaCrypt
 {
-    [CustomEditor(typeof(AvaCryptRoot))]
+    [CustomEditor(typeof(AvaCryptV2Root))]
     [CanEditMultipleObjects]
     public class AvaCryptRootEditor : Editor
     {
-        private SerializedProperty _keyNamesProperty;
+        SerializedProperty _keyNamesProperty;
         SerializedProperty _distortRatioProperty;
         SerializedProperty _keysProperty;
+        SerializedProperty _thirdsProperty;
 
         private void OnEnable()
         {
             _keyNamesProperty = serializedObject.FindProperty("_keynames");
             _distortRatioProperty = serializedObject.FindProperty("_distortRatio");
             _keysProperty = serializedObject.FindProperty("_keys");
+            _thirdsProperty = serializedObject.FindProperty("_averageToThirds");
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            AvaCryptRoot avaCryptRoot = target as AvaCryptRoot;
+            AvaCryptV2Root avaCryptV2Root = target as AvaCryptV2Root;
 
             EditorGUILayout.Space();
             GUILayout.Label("Validate all parameters, layers and animations are correct in this avatar's AnimatorController.");
             if (GUILayout.Button("Validate Animator Controller"))
             {
-                avaCryptRoot.ValidateAnimatorController();
+                avaCryptV2Root.ValidateAnimatorController();
             }
 
             EditorGUILayout.Space();
             GUILayout.Label("Validate the AnimatorController, then create encrypted avatar.");
             if (GUILayout.Button("Encrypt Avatar"))
             {
-                avaCryptRoot.EncryptAvatar();
+                avaCryptV2Root.EncryptAvatar();
             }
 
             EditorGUILayout.Space();
@@ -65,6 +67,13 @@ namespace GeoTetra.GTAvaCrypt
                 EditorGUILayout.Separator();
                 EditorGUILayout.Space();
             }
+            
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Average keys to Thirds");
+            GUILayout.TextArea("Disabling this will make your keys more robust, but it may cause syncing issues in VRC.\n" +
+                               "An old version of VRC had the syncing issue, so in AvaCrypt v1 this was enabled by default\n" +
+                               "But new VRC seems to not have the issue? Lets disable by default. Re-enable if sync issues arise.");
+            EditorGUILayout.PropertyField(_thirdsProperty);
 
             serializedObject.ApplyModifiedProperties();
         }

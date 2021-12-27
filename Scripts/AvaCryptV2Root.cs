@@ -9,25 +9,28 @@ using UnityEditor.Animations;
 
 namespace GeoTetra.GTAvaCrypt
 {
-    public class AvaCryptRoot : MonoBehaviour
+    public class AvaCryptV2Root : MonoBehaviour
     {
         [Header("Key Names")]
         [SerializeField]
         private string[] _keynames = new string[6];
     
-        [Header("Higher value causes more distortion. Default = .02")]
-        [Range(.005f, .2f)]
+        [Header("Set high enough so your encrypted mesh is visuall. Default = .1")]
+        [Range(.05f, .2f)]
         [SerializeField] 
-        private float _distortRatio = .04f;
+        private float _distortRatio = .1f;
 
         [Range(0, 100)] 
         [SerializeField] 
         private int[] _keys = new int[6];
+        
+        [SerializeField] 
+        bool _averageToThirds = false;
 
         #if UNITY_EDITOR
         private readonly AvaCryptController _avaCryptController = new AvaCryptController();
         private readonly AvaCryptMesh _avaCryptMesh = new AvaCryptMesh();
-
+        
         public void ValidateAnimatorController()
         {
             AnimatorController controller = GetAnimatorController();
@@ -110,8 +113,8 @@ namespace GeoTetra.GTAvaCrypt
                 skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _keys);
             }
             
-            AvaCryptRoot[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptRoot>();
-            foreach (AvaCryptRoot avaCryptRoot in avaCryptRoots)
+            AvaCryptV2Root[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptV2Root>();
+            foreach (AvaCryptV2Root avaCryptRoot in avaCryptRoots)
             {
                 DestroyImmediate(avaCryptRoot);
             }
@@ -136,11 +139,21 @@ namespace GeoTetra.GTAvaCrypt
 
         private void OnValidate()
         {
+            if (!_averageToThirds) return;
             for (int i = 0; i < _keys.Length; ++i)
             {
+                // _keys[i] = RoundToTwo(_keys[i]);
                 _keys[i] = RoundToThree(_keys[i]);
-                _keys[i] = Skip76(_keys[i]);
+                // _keys[i] = Skip76(_keys[i]);
             }
+        }
+        
+        private int RoundToTwo(int value)
+        {
+            // allow 0 someone can disable a key
+            if (value == 0) return 0;
+            if (value < 2) return 2;
+            return (value / 2) * 2 + 1;
         }
 
         private int RoundToThree(int value)
@@ -153,7 +166,7 @@ namespace GeoTetra.GTAvaCrypt
         
         /// <summary>
         /// This is super specific to current version of VRC.
-        /// There is a big which doesn't let you select 76 in radial menu, so skip it.
+        /// There is a bug which doesn't let you select 76 in radial menu, so skip it.
         /// </summary>
         private int Skip76(int value)
         {
@@ -163,6 +176,17 @@ namespace GeoTetra.GTAvaCrypt
             }
 
             return value;
+        }
+
+        [ContextMenu("CalcKeyCombinations")]
+        private void CalcKeyCombinations()
+        {
+            int count = 1;
+            for (int i = 0; i < 30; ++i)
+            {
+                count *= 2;
+                Debug.Log($"{i} - {count}");
+            }
         }
 
         [ContextMenu("CleanupBlendTrees")]
