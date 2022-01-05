@@ -1,11 +1,16 @@
+The official root repository for this project is here https://github.com/rygo6/GTAvaCrypt. Be sure you are downloading it only from there.
+
+Be careful to not download code from forked repositories unless you trust the fork. People can fork repositories and add malicious code without the original author having any control or knowledge of it.
+
+
 # GeoTetra AvaCrypt
 
-This is probably the most comprehensive, and invasive, anti-avatar-ripping system that has been publicly released for VRChat. It will protect against your avatar being ripped, extracted and edited. It will also protect against your avatar being ripped, and reuploaded without edits.
+This is probably the most invasive, anti-avatar-ripping system that has been publicly released for VRChat. It will protect against your avatar being ripped, extracted and edited. It will also protect against your avatar being ripped, and reuploaded without edits.
 
 This system will randomize all the vertices of your avatar's mesh, then write that to disk. Then rely on a custom shader, with four decryption keys, to un-randomize the vertex positions in game. This is <b>not</b> done through blend shapes. Rather this will copy, and destructively edit, the 'Basis'' layer of your mesh.
 
 ## Understand no encryption system is 100% secure.
-<b>If someone is committed they can still rip your avatar. Nothing will be able to protect your assets 100% for certain. However, with AvaCrypt it would take a knowledgeable Software Engineer multiple days to rip your avatar. It's also possible someone could hack VRChat to read your four decryption keys if you are in the same world as them. But, if someone you don't know, nor never see in worlds, tries to rip your avatar by scanning the VRChat API, this would introduce a significant diffuculty. </b>
+<b>If someone is committed they can still rip your avatar. Nothing will be able to protect your assets 100% for certain. However, with AvaCrypt it would take someone fairly commited with programming knowledge a number of days to undo this. It's also possible someone could hack VRChat to read your four decryption keys if you are in the same world as them. But, if someone you don't know, nor never see in worlds, tries to rip your avatar by scanning the VRChat API, this would introduce a significant diffuculty. </b>
 
 ## Caveats of this System
 

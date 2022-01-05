@@ -11,10 +11,10 @@ namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptRoot : MonoBehaviour
     {
-        [Header("Higher value causes more distortion. Default = .02")]
-        [Range(.005f, .2f)]
+        [Header("Higher value causes more distortion. Default = .1")]
+        [Range(.05f, .2f)]
         [SerializeField]
-        private float _distortRatio = .02f;
+        private float _distortRatio = .1f;
 
         [Header("The four values which must be entered in game to display the model.")]
         [Range(3, 100)]
