@@ -116,11 +116,11 @@ namespace GeoTetra.GTAvaCrypt
             {
                 if (meshFilter.GetComponent<MeshRenderer>() != null)
                 {
-                    var Materials = meshFilter.GetComponent<MeshRenderer>().sharedMaterials;
+                    var materials = meshFilter.GetComponent<MeshRenderer>().sharedMaterials;
 
-                    foreach (var Material in Materials)
+                    foreach (var mat in materials)
                     {
-                        if (Material.HasProperty("_Key0"))
+                        if (mat != null && mat.HasProperty("_Key0"))
                         {
                             meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _key0, _key1, _key2, _key3, _distortRatio);
                             break;
@@ -132,11 +132,11 @@ namespace GeoTetra.GTAvaCrypt
             SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                var Materials = skinnedMeshRenderer.sharedMaterials;
+                var materials = skinnedMeshRenderer.sharedMaterials;
 
-                foreach (var Material in Materials)
+                foreach (var mat in materials)
                 {
-                    if (Material.HasProperty("_Key0"))
+                    if (mat != null && mat.HasProperty("_Key0"))
                     {
                         skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _key0, _key1, _key2, _key3, _distortRatio);
                         break;
