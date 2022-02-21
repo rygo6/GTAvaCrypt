@@ -1,35 +1,41 @@
-﻿using UnityEngine;
+﻿using System;
+using System.IO;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using VRC.SDK3.Avatars.ScriptableObjects;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Animations;
+using VRC.Core;
+using VRC.SDK3.Avatars.Components;
 #endif
 
 namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptV2Root : MonoBehaviour
     {
-        // [Header("Key Names")]
-        // [SerializeField]
-        // private string[] _keynames = new string[6];
-    
         [Header("Set high enough so your encrypted mesh is visuall. Default = .1")]
         [Range(.1f, .4f)]
         [SerializeField] 
-        private float _distortRatio = .2f;
+        float _distortRatio = .2f;
+
+        [Header("Ensure this is pointing to your LocalAvatarData folder!")]
+        [SerializeField] 
+        string _vrcSavedParamsPath = string.Empty;
         
         [SerializeField] 
-        private bool[] _bitKeys = new bool[32];
+        bool[] _bitKeys = new bool[KeyCount];
         
-        // [SerializeField] 
-        // bool _averageToThirds = false;
-
+        const int KeyCount = 32;
+        
         #if UNITY_EDITOR
-        private readonly AvaCryptController _avaCryptController = new AvaCryptController();
-        private readonly AvaCryptMesh _avaCryptMesh = new AvaCryptMesh();
-        
+        readonly AvaCryptController _avaCryptController = new AvaCryptController();
+        readonly AvaCryptMesh _avaCryptMesh = new AvaCryptMesh();
+
         public void ValidateAnimatorController()
         {
             AnimatorController controller = GetAnimatorController();
@@ -40,7 +46,7 @@ namespace GeoTetra.GTAvaCrypt
             _avaCryptController.ValidateLayers(controller);
         }
 
-        private AnimatorController GetAnimatorController()
+        AnimatorController GetAnimatorController()
         {
             if (transform.parent != null)
             {
@@ -68,7 +74,7 @@ namespace GeoTetra.GTAvaCrypt
                 return null;
             }
      
-            AnimatorController controller = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>(UnityEditor.AssetDatabase.GetAssetPath(runtimeController));
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GetAssetPath(runtimeController));
             if (controller == null)
             {
                 EditorUtility.DisplayDialog("Could not get AnimatorController.", 
@@ -103,13 +109,33 @@ namespace GeoTetra.GTAvaCrypt
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
             {
-                meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, _bitKeys);
+                if (meshFilter.GetComponent<MeshRenderer>() != null)
+                {
+                    var materials = meshFilter.GetComponent<MeshRenderer>().sharedMaterials;
+
+                    foreach (var mat in materials)
+                    {
+                        if (mat != null && mat.HasProperty("_BitKey0"))
+                        {
+                            meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, _bitKeys);
+                            break;
+                        }
+                    }
+                }
             }
             
             SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _bitKeys);
+                var materials = skinnedMeshRenderer.sharedMaterials;
+                foreach (var mat in materials)
+                {
+                    if (mat != null && mat.HasProperty("_BitKey0"))
+                    {
+                        skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _bitKeys);
+                        break;
+                    }
+                }
             }
             
             AvaCryptV2Root[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptV2Root>();
@@ -122,77 +148,221 @@ namespace GeoTetra.GTAvaCrypt
             gameObject.SetActive(false);
         }
 
-        private void Reset()
+        public void WriteBitKeysToExpressions()
         {
-            // Start at 3 because 0 is kept to show unencrypted avatars normally.
-            // for (int i = 0; i < _keys.Length; ++i)
-            // {
-            //     if (_keys[i] == 0) _keys[i] = Random.Range(3, 100);
-            // }
-            //
-            // for (int i = 0; i < _keynames.Length; ++i)
-            // {
-            //     _keynames[i] = $"RENAME ME - Key {i}";
-            // }
-        }
-
-        private void OnValidate()
-        {
-            // if (!_averageToThirds) return;
-            // for (int i = 0; i < _keys.Length; ++i)
-            // {
-            //     // _keys[i] = RoundToTwo(_keys[i]);
-            //     _keys[i] = RoundToThree(_keys[i]);
-            //     // _keys[i] = Skip76(_keys[i]);
-            // }
-        }
-        
-        // private int RoundToTwo(int value)
-        // {
-        //     // allow 0 someone can disable a key
-        //     if (value == 0) return 0;
-        //     if (value < 2) return 2;
-        //     return (value / 2) * 2 + 1;
-        // }
-        //
-        // private int RoundToThree(int value)
-        // {
-        //     // allow 0 someone can disable a key
-        //     if (value == 0) return 0;
-        //     if (value < 4) return 4;
-        //     return (value / 3) * 3 + 1;
-        // }
-        
-        /// <summary>
-        /// This is super specific to current version of VRC.
-        /// There is a bug which doesn't let you select 76 in radial menu, so skip it.
-        /// </summary>
-        // private int Skip76(int value)
-        // {
-        //     if (value == 76)
-        //     {
-        //         return value -= 3;
-        //     }
-        //
-        //     return value;
-        // }
-
-        [ContextMenu("CalcKeyCombinations")]
-        private void CalcKeyCombinations()
-        {
-            int count = 1;
-            for (int i = 0; i < 30; ++i)
+#if  VRC_SDK_EXISTS
+            var descriptor = GetComponent<VRCAvatarDescriptor>();
+            if (descriptor == null)
             {
-                count *= 2;
-                Debug.Log($"{i} - {count}");
+                Debug.LogError("Keys not written! Couldn't find VRCAvatarDescriptor next to GTAvaCryptRoot");
+                EditorUtility.DisplayDialog("Keys not written! Missing PipelineManager!", "Put AvaCryptRoot next to VRCAvatarDescriptor and run Write Keys again.", "Okay");
+                return;
             }
+
+            if (descriptor.expressionParameters == null)
+            {
+                Debug.LogError("Keys not written! Expressions is not filled in on VRCAvatarDescriptor!");
+                EditorUtility.DisplayDialog("Keys not written! Expressions is not filled in on VRCAvatarDescriptor!", "Fill in the Parameters slot on the VRCAvatarDescriptor and run again.", "Okay");
+                return;
+            }
+
+            if (AddBitKeys(descriptor.expressionParameters))
+            {
+                WriteKeysToSaveFile();
+            }
+
+#else
+            Debug.LogError("Can't find VRC SDK?");
+            EditorUtility.DisplayDialog("Can't find VRC SDK?", "You need to isntall VRC SDK.", "Okay");
+#endif
         }
+
+        public void WriteKeysToSaveFile()
+        {
+#if  VRC_SDK_EXISTS
+            var pipelineManager = GetComponent<PipelineManager>();
+            if (pipelineManager == null)
+            {
+                Debug.LogError("Keys not written! Couldn't find PipelineManager next to GTAvaCryptRoot");
+                EditorUtility.DisplayDialog("Keys not written! Couldn't find PipelineManager next to GTAvaCryptRoot", "Put AvaCryptRoot next to PipelineManager and run Write Keys again.", "Okay");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(pipelineManager.blueprintId))
+            {
+                Debug.LogError("Blueprint ID not filled in!");
+                EditorUtility.DisplayDialog("Keys not written! Blueprint ID not filled in!", "You need to first populate your PipelineManager with a Blueprint ID before keys can be written. Publish your avatar to get the Blueprint ID, attach the ID through the PipelineManager then run Write Keys again.","Okay");
+                return;
+            }
+
+            if (!Directory.Exists(_vrcSavedParamsPath))
+            {
+                Debug.LogError("Keys not written! Could not find VRC LocalAvatarData folder!");
+                EditorUtility.DisplayDialog("Could not find VRC LocalAvatarData folder!", "Ensure the VRC Saved Params Path is point to your LocalAvatarData folder, should be at C:\\Users\\username\\AppData\\LocalLow\\VRChat\\VRChat\\LocalAvatarData\\, then run Write Keys again.","Okay");
+                return;
+            }
+
+            foreach (var userDir in Directory.GetDirectories(_vrcSavedParamsPath))
+            {
+                string filePath = $"{userDir}\\{pipelineManager.blueprintId}";
+                Debug.Log($"Writing keys to {filePath}");
+                ParamFile paramFile = null;
+                if (File.Exists(filePath))
+                {
+                    Debug.Log($"Avatar param file already exists, loading and editing.");
+                    var json = File.ReadAllText(filePath);
+                    paramFile = JsonUtility.FromJson<ParamFile>(json);
+                }
+
+                if (paramFile == null)
+                {
+                    paramFile = new ParamFile();
+                    paramFile.animationParameters = new List<ParamFileEntry>();
+                }
+
+                for (int i = 0; i < KeyCount; ++i)
+                {
+                    int entryIndex = paramFile.animationParameters.FindIndex(p => p.name == $"BitKey{i}");
+                    if (entryIndex != -1)
+                    {
+                        paramFile.animationParameters[entryIndex].value = _bitKeys[i] ? 1 : 0;
+                    }
+                    else
+                    {
+                        var newEntry = new ParamFileEntry()
+                        {
+                            name = $"BitKey{i}",
+                            value = _bitKeys[i] ? 1 : 0
+                        };
+                        paramFile.animationParameters.Add(newEntry);
+                    }
+                }
+                
+                System.IO.File.WriteAllText(filePath, JsonUtility.ToJson(paramFile));
+
+                // var pFile = new ParamFile();
+                // pFile.animationParameters = new ParamFileEntry[2];
+                // pFile.animationParameters[0] = new ParamFileEntry();
+                // pFile.animationParameters[0].name = "A";
+                // pFile.animationParameters[0].value = 1;
+                // pFile.animationParameters[1] = new ParamFileEntry();
+                // pFile.animationParameters[1].name = "B";
+                // pFile.animationParameters[1].value = 1;
+                // var pFileJson = JsonUtility.ToJson(pFile);
+                // System.IO.File.WriteAllText($"{userDir}\\test_write!", pFileJson);
+            }
+            
+
+#else
+            Debug.LogError("Can't find VRC SDK?");
+            EditorUtility.DisplayDialog("Can't find VRC SDK?", "You need to isntall VRC SDK.", "Okay");
+#endif
+        }
+
+        [Serializable]
+        public class ParamFile
+        {
+            public List<ParamFileEntry> animationParameters;
+        }
+        
+        [Serializable]
+        public class ParamFileEntry
+        {
+            public string name;
+            public float value;
+        }
+
+        void Reset()
+        {
+            GenerateNewKey();
+            _vrcSavedParamsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\AppData\\LocalLow\\VRChat\\VRChat\\LocalAvatarData\\";
+        }
+
 
         [ContextMenu("CleanupBlendTrees")]
-        private void CleanupBlendTrees()
+        public void GenerateNewKey()
+        {
+            for (int i = 0; i < _bitKeys.Length; ++i)
+            {
+                _bitKeys[i] = Random.Range(-1f, 1f) > 0;
+            }
+        }
+        
+#if  VRC_SDK_EXISTS
+        [MenuItem("CONTEXT/VRCExpressionParameters/Add BitKeys")]
+        static void AddBitKeys(MenuCommand command)
+        {
+            VRCExpressionParameters parameters = (VRCExpressionParameters) command.context;
+            AddBitKeys(parameters);
+        }
+
+        public static bool AddBitKeys(VRCExpressionParameters parameters)
+        {
+            int remainingCost = VRCExpressionParameters.MAX_PARAMETER_COST - parameters.CalcTotalCost();;
+            Debug.Log(remainingCost);
+            if (remainingCost < 32)
+            {
+                Debug.LogError("You need 32 bits available!");
+                EditorUtility.DisplayDialog("You need 32 bits available!", "Clear enough parameters for there to be 32 bits available.", "Okay");
+                return false;
+            }
+
+            List<VRCExpressionParameters.Parameter> paramList = parameters.parameters.ToList();
+            
+            for (int i = 0; i < KeyCount; ++i)
+            {
+                string bitKeyName = $"BitKey{i}";
+                
+                int index = Array.FindIndex(parameters.parameters, p => p.name == bitKeyName);
+                if (index != -1)
+                {
+                    Debug.Log($"Found BitKey in params {bitKeyName}");
+                    parameters.parameters[index].saved = true;
+                    parameters.parameters[index].defaultValue = 0;
+                    parameters.parameters[index].valueType = VRCExpressionParameters.ValueType.Bool;
+                }
+                else
+                {
+                    Debug.Log($"Adding BitKey in params {bitKeyName}");
+                    var newParam = new VRCExpressionParameters.Parameter
+                    {
+                        name = bitKeyName,
+                        saved = true,
+                        defaultValue = 0,
+                        valueType = VRCExpressionParameters.ValueType.Bool
+                    };
+                    paramList.Add(newParam);
+                }
+            }
+
+            parameters.parameters = paramList.ToArray();
+
+            EditorUtility.SetDirty(parameters);
+
+            return true;
+        }
+        
+        [MenuItem("CONTEXT/VRCExpressionParameters/Remove BitKeys")]
+        static void RemoveBitKeys(MenuCommand command)
+        {
+            VRCExpressionParameters parameters = (VRCExpressionParameters) command.context;
+            RemoveBitKeys(parameters);
+        }
+        
+        public static void RemoveBitKeys(VRCExpressionParameters parameters)
+        {
+            List<VRCExpressionParameters.Parameter> parametersList = parameters.parameters.ToList();
+            parametersList.RemoveAll(p => p.name.Contains("BitKey"));
+            parameters.parameters = parametersList.ToArray();
+            
+            EditorUtility.SetDirty(parameters);
+        }
+#endif   
+
+        public void CleanupController()
         {
             _avaCryptController.InitializeCount(_bitKeys.Length);
-            _avaCryptController.CleanupBlendTrees(GetAnimatorController());
+            _avaCryptController.CleanupController(GetAnimatorController());
         }
 #endif
     }

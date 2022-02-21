@@ -11,14 +11,14 @@ namespace GeoTetra.GTAvaCrypt
         SerializedProperty _distortRatioProperty;
         SerializedProperty _keysProperty;
         SerializedProperty _thirdsProperty;
+        SerializedProperty _vrcSavedParamsPathProperty;
         bool _debugFoldout = false;
 
-        private void OnEnable()
+        void OnEnable()
         {
-            // _keyNamesProperty = serializedObject.FindProperty("_keynames");
             _distortRatioProperty = serializedObject.FindProperty("_distortRatio");
             _keysProperty = serializedObject.FindProperty("_bitKeys");
-            // _thirdsProperty = serializedObject.FindProperty("_averageToThirds");
+            _vrcSavedParamsPathProperty = serializedObject.FindProperty("_vrcSavedParamsPath");
         }
 
         public override void OnInspectorGUI()
@@ -33,6 +33,14 @@ namespace GeoTetra.GTAvaCrypt
             {
                 avaCryptV2Root.EncryptAvatar();
             }
+            
+            EditorGUILayout.Space();
+            GUILayout.Label("Write your keys to saved attributes!");
+            if (GUILayout.Button("Write Keys"))
+            {
+                avaCryptV2Root.WriteBitKeysToExpressions();
+            }
+            EditorGUILayout.PropertyField(_vrcSavedParamsPathProperty);
 
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(_distortRatioProperty);
@@ -56,6 +64,20 @@ namespace GeoTetra.GTAvaCrypt
                 if (GUILayout.Button("Validate Animator Controller"))
                 {
                     avaCryptV2Root.ValidateAnimatorController();
+                }
+                
+                EditorGUILayout.Space();
+                GUILayout.Label("Deletes all the layers which AvaCrypt added to the AnimatorController.");
+                if (GUILayout.Button("Cleanup Controller"))
+                {
+                    avaCryptV2Root.CleanupController();
+                }
+                
+                EditorGUILayout.Space();
+                GUILayout.Label("Generate new key overriding old one. Will need to write key again!");
+                if (GUILayout.Button("Generate Key"))
+                {
+                    avaCryptV2Root.GenerateNewKey();
                 }
             }
 

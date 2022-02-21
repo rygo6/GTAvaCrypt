@@ -351,16 +351,19 @@ namespace GeoTetra.GTAvaCrypt
         //     AssetDatabase.SaveAssets();
         // }
         
-        public void CleanupBlendTrees(AnimatorController controller)
+        public void CleanupController(AnimatorController controller)
         {
             for (int i = 0; i < _avaCryptKeyNames.Length; ++i)
             {
                 DeleteObjectFromController(controller, string.Format(StateMachineName, i));
                 DeleteObjectFromController(controller, string.Format(BlendTreeName, i));
+                // todo make delete layers
+                // DeleteObjectFromController(controller, string.Format(BitKeySwitchName, "False", i));
+                // DeleteObjectFromController(controller, string.Format(BitKeySwitchName, "True", i));
             }
         }
 
-        private void DeleteObjectFromController(AnimatorController controller, string name)
+        void DeleteObjectFromController(AnimatorController controller, string name)
         {
             string controllerPath = AssetDatabase.GetAssetPath(controller);
             foreach (Object subObject in AssetDatabase.LoadAllAssetsAtPath(controllerPath))
