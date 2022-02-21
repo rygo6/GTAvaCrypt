@@ -11,21 +11,20 @@ namespace GeoTetra.GTAvaCrypt
 {
     public class AvaCryptV2Root : MonoBehaviour
     {
-        [Header("Key Names")]
-        [SerializeField]
-        private string[] _keynames = new string[6];
+        // [Header("Key Names")]
+        // [SerializeField]
+        // private string[] _keynames = new string[6];
     
         [Header("Set high enough so your encrypted mesh is visuall. Default = .1")]
-        [Range(.05f, .2f)]
+        [Range(.1f, .4f)]
         [SerializeField] 
-        private float _distortRatio = .1f;
-
-        [Range(0, 100)] 
-        [SerializeField] 
-        private int[] _keys = new int[6];
+        private float _distortRatio = .2f;
         
         [SerializeField] 
-        bool _averageToThirds = false;
+        private bool[] _bitKeys = new bool[32];
+        
+        // [SerializeField] 
+        // bool _averageToThirds = false;
 
         #if UNITY_EDITOR
         private readonly AvaCryptController _avaCryptController = new AvaCryptController();
@@ -35,7 +34,7 @@ namespace GeoTetra.GTAvaCrypt
         {
             AnimatorController controller = GetAnimatorController();
 
-            _avaCryptController.InitializeCount(_keynames);
+            _avaCryptController.InitializeCount(_bitKeys.Length);
             _avaCryptController.ValidateAnimations(gameObject, controller);
             _avaCryptController.ValidateParameters(controller);
             _avaCryptController.ValidateLayers(controller);
@@ -99,18 +98,18 @@ namespace GeoTetra.GTAvaCrypt
             encodedGameObject.name = newName;
             encodedGameObject.SetActive(true);
             
-            _avaCryptMesh.InitializeRandoms(_keynames.Length);
+            _avaCryptMesh.InitializeRandoms(_bitKeys.Length);
             
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
             {
-                meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, _keys);
+                meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, _bitKeys);
             }
             
             SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _keys);
+                skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _bitKeys);
             }
             
             AvaCryptV2Root[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptV2Root>();
@@ -126,57 +125,57 @@ namespace GeoTetra.GTAvaCrypt
         private void Reset()
         {
             // Start at 3 because 0 is kept to show unencrypted avatars normally.
-            for (int i = 0; i < _keys.Length; ++i)
-            {
-                if (_keys[i] == 0) _keys[i] = Random.Range(3, 100);
-            }
-            
-            for (int i = 0; i < _keynames.Length; ++i)
-            {
-                _keynames[i] = $"RENAME ME - Key {i}";
-            }
+            // for (int i = 0; i < _keys.Length; ++i)
+            // {
+            //     if (_keys[i] == 0) _keys[i] = Random.Range(3, 100);
+            // }
+            //
+            // for (int i = 0; i < _keynames.Length; ++i)
+            // {
+            //     _keynames[i] = $"RENAME ME - Key {i}";
+            // }
         }
 
         private void OnValidate()
         {
-            if (!_averageToThirds) return;
-            for (int i = 0; i < _keys.Length; ++i)
-            {
-                // _keys[i] = RoundToTwo(_keys[i]);
-                _keys[i] = RoundToThree(_keys[i]);
-                // _keys[i] = Skip76(_keys[i]);
-            }
+            // if (!_averageToThirds) return;
+            // for (int i = 0; i < _keys.Length; ++i)
+            // {
+            //     // _keys[i] = RoundToTwo(_keys[i]);
+            //     _keys[i] = RoundToThree(_keys[i]);
+            //     // _keys[i] = Skip76(_keys[i]);
+            // }
         }
         
-        private int RoundToTwo(int value)
-        {
-            // allow 0 someone can disable a key
-            if (value == 0) return 0;
-            if (value < 2) return 2;
-            return (value / 2) * 2 + 1;
-        }
-
-        private int RoundToThree(int value)
-        {
-            // allow 0 someone can disable a key
-            if (value == 0) return 0;
-            if (value < 4) return 4;
-            return (value / 3) * 3 + 1;
-        }
+        // private int RoundToTwo(int value)
+        // {
+        //     // allow 0 someone can disable a key
+        //     if (value == 0) return 0;
+        //     if (value < 2) return 2;
+        //     return (value / 2) * 2 + 1;
+        // }
+        //
+        // private int RoundToThree(int value)
+        // {
+        //     // allow 0 someone can disable a key
+        //     if (value == 0) return 0;
+        //     if (value < 4) return 4;
+        //     return (value / 3) * 3 + 1;
+        // }
         
         /// <summary>
         /// This is super specific to current version of VRC.
         /// There is a bug which doesn't let you select 76 in radial menu, so skip it.
         /// </summary>
-        private int Skip76(int value)
-        {
-            if (value == 76)
-            {
-                return value -= 3;
-            }
-
-            return value;
-        }
+        // private int Skip76(int value)
+        // {
+        //     if (value == 76)
+        //     {
+        //         return value -= 3;
+        //     }
+        //
+        //     return value;
+        // }
 
         [ContextMenu("CalcKeyCombinations")]
         private void CalcKeyCombinations()
@@ -192,7 +191,7 @@ namespace GeoTetra.GTAvaCrypt
         [ContextMenu("CleanupBlendTrees")]
         private void CleanupBlendTrees()
         {
-            _avaCryptController.InitializeCount(_keynames);
+            _avaCryptController.InitializeCount(_bitKeys.Length);
             _avaCryptController.CleanupBlendTrees(GetAnimatorController());
         }
 #endif
