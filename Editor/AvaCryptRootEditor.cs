@@ -67,10 +67,10 @@ namespace GeoTetra.GTAvaCrypt
                 }
                 
                 EditorGUILayout.Space();
-                GUILayout.Label("Deletes all the layers which AvaCrypt added to the AnimatorController.");
-                if (GUILayout.Button("Cleanup Controller"))
+                GUILayout.Label("Deletes all the objects AvaCrypt V1 wrote to your controller.");
+                if (GUILayout.Button("Delete AvaCryptV1 Objects From Controller"))
                 {
-                    avaCryptV2Root.CleanupController();
+                    avaCryptV2Root.DeleteAvaCryptV1ObjectsFromController();
                 }
                 
                 EditorGUILayout.Space();

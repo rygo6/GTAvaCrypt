@@ -241,7 +241,8 @@ namespace GeoTetra.GTAvaCrypt
                 System.IO.File.WriteAllText(filePath, JsonUtility.ToJson(paramFile));
             }
             
-
+            EditorUtility.DisplayDialog("Successfully Wrote Keys!", "Your avatar should now just work in VRChat. If you accidentally hit 'Reset Avatar' in VRC 3.0 menu, you need to run this again.","Okay");
+            
 #else
             Debug.LogError("Can't find VRC SDK?");
             EditorUtility.DisplayDialog("Can't find VRC SDK?", "You need to isntall VRC SDK.", "Okay");
@@ -292,7 +293,7 @@ namespace GeoTetra.GTAvaCrypt
             if (remainingCost < 32)
             {
                 Debug.LogError("You need 32 bits available!");
-                EditorUtility.DisplayDialog("You need 32 bits available!", "Clear enough parameters for there to be 32 bits available.", "Okay");
+                EditorUtility.DisplayDialog("You need 32 bits available!", "Clear enough slots in VRCExpressionParameters for there to be 32 bits available.", "Okay");
                 return false;
             }
 
@@ -348,10 +349,10 @@ namespace GeoTetra.GTAvaCrypt
         }
 #endif   
 
-        public void CleanupController()
+        [ContextMenu("Delete AvaCryptV1 Objects From Controller")]
+        public void DeleteAvaCryptV1ObjectsFromController()
         {
-            _avaCryptController.InitializeCount(_bitKeys.Length);
-            _avaCryptController.CleanupController(GetAnimatorController());
+            _avaCryptController.DeleteAvaCryptV1ObjectsFromController(GetAnimatorController());
         }
 #endif
     }

@@ -1,12 +1,10 @@
 ﻿#if UNITY_EDITOR
-using System;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using AnimatorController = UnityEditor.Animations.AnimatorController;
 using AnimatorControllerLayer = UnityEditor.Animations.AnimatorControllerLayer;
-using BlendTree = UnityEditor.Animations.BlendTree;
 using Object = UnityEngine.Object;
 
 namespace GeoTetra.GTAvaCrypt
@@ -144,9 +142,6 @@ namespace GeoTetra.GTAvaCrypt
                     {
                         Debug.Log("Layer missing state machine.");
                         
-                        // Try to delete blend tree and layers if by chance they still exist for some reason.
-                        DeleteObjectFromController(controller, string.Format(StateMachineName, i));
-                        
                         controller.RemoveLayer(controller.layers.ToList().IndexOf(layer));
                         
                         CreateLayer(i, controller);
@@ -167,94 +162,27 @@ namespace GeoTetra.GTAvaCrypt
             if (layer.stateMachine.states.All(s => s.state.name != trueSwitchName))
             {
                 Debug.Log($"Layer missing BitKeySwtich. {trueSwitchName}");
-                DeleteObjectFromController(controller, trueSwitchName);
                 AddBitKeySwitch(index, layer, controller);
             }
             else
             {
                 Debug.Log($"Layer BitKey Switch Validated {trueSwitchName}.");
-                
-                // BlendTree blendTree = layer.stateMachine.states.FirstOrDefault(s => s.state.name == trueSwitchName).state.motion as BlendTree;
-                //
-                // // Just re-assign since ChildMotions aren't their own ScriptableObjects.
-                // ChildMotion childMotion0 = new ChildMotion
-                // {
-                //     motion = _clipsFalse[index],
-                //     timeScale = 1
-                // };
-                // ChildMotion childMotion1 = new ChildMotion
-                // {
-                //     motion = _clipsTrue[index],
-                //     timeScale = 1
-                // };
-                // blendTree.children = new ChildMotion[2] {childMotion0, childMotion1};
-                
                 AssetDatabase.SaveAssets();;
             }
             
             if (layer.stateMachine.states.All(s => s.state.name != falseSwitchName))
             {
                 Debug.Log($"Layer missing BitKeySwtich. {falseSwitchName}");
-                DeleteObjectFromController(controller, falseSwitchName);
                 AddBitKeySwitch(index, layer, controller);
             }
             else
             {
                 Debug.Log($"Layer BitKey Switch Validated {falseSwitchName}.");
-                
-                // BlendTree blendTree = layer.stateMachine.states.FirstOrDefault(s => s.state.name == trueSwitchName).state.motion as BlendTree;
-                //
-                // // Just re-assign since ChildMotions aren't their own ScriptableObjects.
-                // ChildMotion childMotion0 = new ChildMotion
-                // {
-                //     motion = _clipsFalse[index],
-                //     timeScale = 1
-                // };
-                // ChildMotion childMotion1 = new ChildMotion
-                // {
-                //     motion = _clipsTrue[index],
-                //     timeScale = 1
-                // };
-                // blendTree.children = new ChildMotion[2] {childMotion0, childMotion1};
-                
                 AssetDatabase.SaveAssets();;
             }
         }
-        
-        // private void ValidateLayerBlendTree(int index, AnimatorControllerLayer layer, AnimatorController controller)
-        // {
-        //     string blendTreeName = string.Format(BlendTreeName, index);
-        //     
-        //     if (layer.stateMachine.states.All(s => s.state.name != blendTreeName))
-        //     {
-        //         Debug.Log($"Layer missing blend tree. {blendTreeName}");
-        //         DeleteObjectFromController(controller, blendTreeName);
-        //         AddBitKeySwitch(index, layer, controller);
-        //     }
-        //     else
-        //     {
-        //         Debug.Log($"Layer Blend Tree Validated {blendTreeName}.");
-        //         
-        //         BlendTree blendTree = layer.stateMachine.states.FirstOrDefault(s => s.state.name == blendTreeName).state.motion as BlendTree;
-        //         
-        //         // Just re-assign since ChildMotions aren't their own ScriptableObjects.
-        //         ChildMotion childMotion0 = new ChildMotion
-        //         {
-        //             motion = _clipsFalse[index],
-        //             timeScale = 1
-        //         };
-        //         ChildMotion childMotion1 = new ChildMotion
-        //         {
-        //             motion = _clipsTrue[index],
-        //             timeScale = 1
-        //         };
-        //         blendTree.children = new ChildMotion[2] {childMotion0, childMotion1};
-        //         
-        //         AssetDatabase.SaveAssets();;
-        //     }
-        // }
 
-        private void CreateLayer(int index, AnimatorController controller)
+        void CreateLayer(int index, AnimatorController controller)
         {
             Debug.Log($"Creating layer: {_avaCryptKeyNames[index]}");
             
@@ -277,7 +205,7 @@ namespace GeoTetra.GTAvaCrypt
             AddBitKeySwitch(index, layer, controller);
         }
         
-        private void AddBitKeySwitch(int index, AnimatorControllerLayer layer, AnimatorController controller)
+        void AddBitKeySwitch(int index, AnimatorControllerLayer layer, AnimatorController controller)
         {
             string trueSwitchName = string.Format(BitKeySwitchName, "True", index);
             string falseSwitchName = string.Format(BitKeySwitchName, "False", index);
@@ -315,58 +243,13 @@ namespace GeoTetra.GTAvaCrypt
             
             AssetDatabase.SaveAssets();
         }
-
-        // private void AddBlendTree(int index, AnimatorControllerLayer layer, AnimatorController controller)
-        // {
-        //     string controllerPath = AssetDatabase.GetAssetPath(controller);
-        //     string blendTreeName = string.Format(BlendTreeName, index);
-        //     
-        //     AnimatorState state = layer.stateMachine.AddState(blendTreeName);
-        //     state.speed = 1;
-        //     
-        //     BlendTree blendTree = new BlendTree
-        //     {
-        //         name = blendTreeName,
-        //         blendType = BlendTreeType.Simple1D,
-        //         blendParameter = _avaCryptKeyNames[index],
-        //     };
-        //     
-        //     ChildMotion childMotion0 = new ChildMotion
-        //     {
-        //         motion = _clipsFalse[index],
-        //         timeScale = 1
-        //     };
-        //     ChildMotion childMotion1 = new ChildMotion
-        //     {
-        //         motion = _clipsTrue[index],
-        //         timeScale = 1
-        //     };
-        //     blendTree.children = new ChildMotion[2] {childMotion0, childMotion1};
-        //     
-        //     state.motion = blendTree;
-        //     AssetDatabase.AddObjectToAsset(blendTree, controllerPath);
-        //     
-        //     AssetDatabase.SaveAssets();
-        // }
         
-        public void CleanupController(AnimatorController controller)
-        {
-            for (int i = 0; i < _avaCryptKeyNames.Length; ++i)
-            {
-                DeleteObjectFromController(controller, string.Format(StateMachineName, i));
-                DeleteObjectFromController(controller, string.Format(BlendTreeName, i));
-                // todo make delete layers
-                // DeleteObjectFromController(controller, string.Format(BitKeySwitchName, "False", i));
-                // DeleteObjectFromController(controller, string.Format(BitKeySwitchName, "True", i));
-            }
-        }
-
-        void DeleteObjectFromController(AnimatorController controller, string name)
+        public void DeleteAvaCryptV1ObjectsFromController(AnimatorController controller)
         {
             string controllerPath = AssetDatabase.GetAssetPath(controller);
             foreach (Object subObject in AssetDatabase.LoadAllAssetsAtPath(controllerPath))
             {
-                if (subObject.hideFlags == HideFlags.None && subObject.name == name)
+                if (subObject.hideFlags == HideFlags.None && subObject.name.Contains("AvaCrypt"))
                 {
                     AssetDatabase.RemoveObjectFromAsset(subObject);
                 }
