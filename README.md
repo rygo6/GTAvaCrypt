@@ -50,18 +50,18 @@ Please take the time to understand the caveats of this system, as it does produc
 
 #### Upgrading from V1
 
-If you are upgrading from V1 you will want to clear out everything previously related. This is not a small delta change, many things are fundamentally changes. Also it is made to work with the latest Poiyomi which has also introduced significant changes since V1.
+If you are upgrading from V1 you will want to clear out everything previously related. This is not a small delta change, many things are fundamentally changed. Also it is made to work with the latest Poiyomi which has also introduced significant changes since V1.
 
 1. Select your avatar and delete the AvaCryptRoot V1 component.
 2. Delete the AvaCrypt key entries from your VRCExpressionParameters.
 3. Remove the AvaCrypt key menu from VRCExpressionsMenu.
-4. Delete the entire GTAvaCrypt folder and the entire GTPoiyomiShader folder. Please note that this did upgrade to use the latest Poiyomi, so when you pull in the new Poiyomi all your shader refs will be broken! But if you go to each material select the new version under '.poiyomi/PoiyomiToon' it should repopulate the new shader with however you had it configured.
-5. After you install the new packages, there is a new button on the AvaCryptV2Root component under the 'Debug' foldout at the bottom of it that says 'Delete AvaCryptV1 Objects From Controller'. This should delete all the old AvaCryptV1 layers and blend trees. But still go into the FX AnimatorController and delete any old AvaCrypt keys or layers.
+4. Delete the entire GTAvaCrypt folder and the entire GTPoiyomiShader folder. Please note that this did upgrade to use the latest Poiyomi, so when you pull in the new Poiyomi all your shader refs will be broken! But if you go to each material and select the new version under '.poiyomi/PoiyomiToon' it should repopulate the new shader with however you had it configured previously.
+5. After you install the new packages, there is a new button on the AvaCryptV2Root component under the 'Debug' foldout at the bottom of it that says 'Delete AvaCryptV1 Objects From Controller'. This should delete all the old AvaCryptV1 layers and blend trees. But still go into the FX AnimatorController and delete any old AvaCrypt keys or layers. You can also delete all the 'AvaCryptKey0' 'AvaCryptKey100' animation files it generated next to your controller.
 
 #### Import AvaCrypt and Poiyomi.
 
 1. Ensure you are using latest VRC SDK.
-2. Download the code for GTAvaCryptV2 and GTPoiyomiShader by clicing the 'Code' button in the upper right, followed by 'Download Zip'. Import it into your project. The V2 branch of Poiyomi is here: https://github.com/rygo6/GTPoiyomiToonShader/tree/feature/v2
+2. Download the code for GTAvaCryptV2 and GTPoiyomiShader by clicking the 'Code' button in the upper right, followed by 'Download Zip'. Import it into your project. The V2 branch of Poiyomi is here: https://github.com/rygo6/GTPoiyomiToonShader/tree/feature/v2
 
 #### Setup VRC Components.
 
@@ -78,7 +78,7 @@ If you are upgrading from V1 you will want to clear out everything previously re
 
 ![Step 4](Textures/DocSteps4.png)
 
-6. <i>Optional V1 Cleanup step.</i> If you have AvaCrypV1 installed, go to 'AvaCryptV2Root' component and under the 'Debug' foldout at the bottom click that button that says 'Delete AvaCryptV1 Objects From Controller'. This should delete all the old AvaCryptV1 layers and blend trees. But still go into the FX AnimatorController and delete any old AvaCrypt keys or layers. All new ones need to be setup.
+6. <i>Optional V1 Cleanup step.</i> If you have AvaCrypV1 installed, go to 'AvaCryptV2Root' component and under the 'Debug' foldout at the bottom click that button that says 'Delete AvaCryptV1 Objects From Controller'. This should delete all the old AvaCryptV1 layers and blend trees. But still go into the FX AnimatorController and delete any old AvaCrypt keys or layers you see. You can also delete all the 'AvaCryptKey0' 'AvaCryptKey100' animation files it previously generated next to your controller.
 
 7. Ensure any meshes you wish to have encrypted are using the new V2 edit of Poiyomi. It will skip over mesh that do not use this shader.
 8. On the `AvaCryptV2Root` component click the 'Encrypt Avatar' button. This will make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted. Be aware your duplicated avatar with "_Encrypted" appended to it's name will appear completely garbled in the editor. This is what other users will see if they do not have your avatar shown. Do not set the keys on the material inside the Unity Editor.
