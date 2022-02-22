@@ -80,9 +80,23 @@ If you are upgrading from V1 you will want to clear out everything previously re
 
 6. <i>Optional V1 Cleanup step.</i> If you have AvaCrypV1 installed, go to 'AvaCryptV2Root' component and under the 'Debug' foldout at the bottom click that button that says 'Delete AvaCryptV1 Objects From Controller'. This should delete all the old AvaCryptV1 layers and blend trees. But still go into the FX AnimatorController and delete any old AvaCrypt keys or layers you see. You can also delete all the 'AvaCryptKey0' 'AvaCryptKey100' animation files it previously generated next to your controller.
 
-7. Ensure any meshes you wish to have encrypted are using the new V2 edit of Poiyomi. It will skip over mesh that do not use this shader.
-8. On the `AvaCryptV2Root` component click the 'Encrypt Avatar' button. This will make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted. Be aware your duplicated avatar with "_Encrypted" appended to it's name will appear completely garbled in the editor. This is what other users will see if they do not have your avatar shown. Do not set the keys on the material inside the Unity Editor.
-9. Go to the VRChat SDK Menu then 'Build and Publish' your avatar which has '_Encrypted' appended to the name.
+#### Setup New Poiyomi
+
+1. This step is a real annoyance, may figure how to automate it. So apologize, but for now this is what you have to do.
+2. New Poiyomi shaders can Lock and Unlock to optimize the resulting code. When you Encrypt a mesh, since it writes out new shader code, all of your Poiyomi Materials need to Unlocked! So click through each Poiyomi material your avatar uses and Unlock them.
+
+![Step 4](Textures/DocStepsPoiyomiUnlock.png)
+
+3. Also in the new Poiyomi you have to right click on any parameter you want to be animatable in-game, all the keys need to be animatable. So go to each material you are using with Poiyomi on your avatar, scroll down to the very bottom under the 'Debug' foldout and right-click on _Key0-_Key31. When you right-click a little clock icon should appear to the left of it.
+4. Also ensure the 'Enable AvaCrypt' bool is checked.
+   
+![Step 4](Textures/DocStepsPoiyomi.png)
+
+#### Encrypting and Uploading
+
+1. Ensure any meshes you wish to have encrypted are using the new V2 edit of Poiyomi. It will skip over mesh that do not use this shader.
+2. On the `AvaCryptV2Root` component click the 'Encrypt Avatar' button. This will make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted. Be aware your duplicated avatar with "_Encrypted" appended to it's name will appear completely garbled in the editor. This is what other users will see if they do not have your avatar shown. Do not set the keys on the material inside the Unity Editor.
+3Go to the VRChat SDK Menu then 'Build and Publish' your avatar which has '_Encrypted' appended to the name.
 
 #### Writing Keys
 
