@@ -239,17 +239,6 @@ namespace GeoTetra.GTAvaCrypt
                 }
                 
                 System.IO.File.WriteAllText(filePath, JsonUtility.ToJson(paramFile));
-
-                // var pFile = new ParamFile();
-                // pFile.animationParameters = new ParamFileEntry[2];
-                // pFile.animationParameters[0] = new ParamFileEntry();
-                // pFile.animationParameters[0].name = "A";
-                // pFile.animationParameters[0].value = 1;
-                // pFile.animationParameters[1] = new ParamFileEntry();
-                // pFile.animationParameters[1].name = "B";
-                // pFile.animationParameters[1].value = 1;
-                // var pFileJson = JsonUtility.ToJson(pFile);
-                // System.IO.File.WriteAllText($"{userDir}\\test_write!", pFileJson);
             }
             
 

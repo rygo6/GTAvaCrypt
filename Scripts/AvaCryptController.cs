@@ -146,8 +146,6 @@ namespace GeoTetra.GTAvaCrypt
                         
                         // Try to delete blend tree and layers if by chance they still exist for some reason.
                         DeleteObjectFromController(controller, string.Format(StateMachineName, i));
-                        DeleteObjectFromController(controller, string.Format(BitKeySwitchName, "False", i));
-                        DeleteObjectFromController(controller, string.Format(BitKeySwitchName, "True", i));
                         
                         controller.RemoveLayer(controller.layers.ToList().IndexOf(layer));
                         
