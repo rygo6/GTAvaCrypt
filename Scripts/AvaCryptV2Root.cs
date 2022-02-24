@@ -150,7 +150,7 @@ namespace GeoTetra.GTAvaCrypt
 
         public void WriteBitKeysToExpressions()
         {
-#if  VRC_SDK_EXISTS
+#if  VRC_SDK_VRCSDK3
             var descriptor = GetComponent<VRCAvatarDescriptor>();
             if (descriptor == null)
             {
@@ -179,7 +179,7 @@ namespace GeoTetra.GTAvaCrypt
 
         public void WriteKeysToSaveFile()
         {
-#if  VRC_SDK_EXISTS
+#if  VRC_SDK_VRCSDK3
             var pipelineManager = GetComponent<PipelineManager>();
             if (pipelineManager == null)
             {
@@ -278,7 +278,7 @@ namespace GeoTetra.GTAvaCrypt
             }
         }
         
-#if  VRC_SDK_EXISTS
+#if  VRC_SDK_VRCSDK3
         [MenuItem("CONTEXT/VRCExpressionParameters/Add BitKeys")]
         static void AddBitKeys(MenuCommand command)
         {
