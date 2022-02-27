@@ -61,7 +61,7 @@ If you are upgrading from V1 you will want to clear out everything previously re
 #### Import AvaCrypt and Poiyomi.
 
 1. Ensure you are using latest VRC SDK.
-2. Download the code for GTAvaCryptV2 and GTPoiyomiShader by clicking the 'Code' button in the upper right, followed by 'Download Zip'. Import it into your project. The V2 branch of Poiyomi is here: https://github.com/rygo6/GTPoiyomiToonShader/tree/feature/v2
+2. Download the code for GTAvaCryptV2 and GTPoiyomiShader by clicking the 'Code' button in the upper right, followed by 'Download Zip'. Import it into your project. The V2 branch of Poiyomi is here: https://github.com/rygo6/GTPoiyomiToonShader/releases/tag/release%2FGTV2.0
 
 #### Setup VRC Components.
 
