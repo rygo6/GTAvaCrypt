@@ -143,7 +143,11 @@ namespace GeoTetra.GTAvaCrypt
             }
             else
             {
-                System.IO.File.WriteAllText(AssetDatabase.GUIDToAssetPath(searchResult[0]), $"{ModelShaderDecodeFirst}{sb0.ToString()}{sb1.ToString()}{ModelShaderDecodeSecond}");
+                foreach (string sr in searchResult)
+                {
+                    Debug.Log($"Writing GTModelDecode {sr}");
+                    System.IO.File.WriteAllText(AssetDatabase.GUIDToAssetPath(sr), $"{ModelShaderDecodeFirst}{sb0.ToString()}{sb1.ToString()}{ModelShaderDecodeSecond}");
+                }
             }
             
             float maxDistance = mesh.bounds.max.magnitude - mesh.bounds.min.magnitude;
