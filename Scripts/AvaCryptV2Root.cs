@@ -320,7 +320,7 @@ namespace GeoTetra.GTAvaCrypt
             
             int remainingCost = VRCExpressionParameters.MAX_PARAMETER_COST - parameters.CalcTotalCost();;
             Debug.Log(remainingCost);
-            if (remainingCost < 32)
+            if (remainingCost < 0)
             {
                 Debug.LogError("Adding BitKeys took up too many parameters!");
                 EditorUtility.DisplayDialog("Adding BitKeys took up too many parameters!", "Go to your VRCExpressionParameters and remove some unnecessary parameters to make room for the 32 BitKey bools and run this again.", "Okay");

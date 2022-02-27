@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -232,7 +233,7 @@ namespace GeoTetra.GTAvaCrypt
                 }
             }
 
-            AssetDatabase.CreateAsset(newMesh, obfuscatedMeshPath);
+            AssetDatabase.CreateAsset(newMesh, encryptedMeshPath);
             AssetDatabase.SaveAssets();
 
             return newMesh;
