@@ -1,6 +1,8 @@
 The official root repository for this project is here https://github.com/rygo6/GTAvaCrypt. Be sure you are downloading it only from there.
 
-Be careful to not download code from forked repositories unless you trust the fork. People can fork repositories and add malicious code without the original author having any control or knowledge of it.
+This software is provided fully open sourced with no compiled DLLs and no obfuscated code, so it can be inspected by anyone to not be malicious. All PRs to original root repo  https://github.com/rygo6/GTAvaCrypt I personally validate and am open to anyone contributing.
+
+Be careful to not download code from forked repositories unless you trust the fork. People can fork repositories and add malicious code without the original author having any control or knowledge of it. Be careful of importing closed source projects or compiled DLLs into an Unity Project as the Unity Editor typically has higher than average system privilidges and antivirus software will generally not catch malicious code.
 
 # GeoTetra AvaCrypt V2
 
