@@ -24,7 +24,7 @@ AvaCrypt V1 has been a moderate success. Having gathered dozens of followers in 
 ## But still, understand no encryption system is 100% secure.
 <b>If someone is committed they can still rip your avatar. Nothing will be able to protect your assets 100% for certain. However this introduces significant complication.</b>
 
-I am up-front about how exactly you would undo AvaCrypt so that people can be on the lookout for when certain anti-ripping techniques may be compromised. Someone did write a mod that could compromise AvaCryptV1 if you were in the same world as them, someone else wrote a script that [could maybe brute force AvaCryptV1 if your distortion ratio is low](https://gitlab.com/-/snippets/2202094), but that script didn't manage to undo any of my avatars.
+I am up-front about how exactly you would undo AvaCrypt so that people can be on the lookout for when certain anti-ripping techniques may be compromised. Someone did write a mod that could compromise AvaCryptV1 if you were in the same world as them, someone else wrote a script that [could maybe brute force AvaCryptV1 if your distortion ratio is low and the mesh is simpler](https://gitlab.com/-/snippets/2202094), but that script didn't manage to undo any of my avatars.
 
 The key now being truly 32 bits does introduce a significant enough barrier to brute forcing that most probably just won't spend the time to do. So this is quite effective against avatars ripped purely off the VRChat API. 
 
