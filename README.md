@@ -24,7 +24,7 @@ AvaCrypt V1 has been a moderate success. Having gathered dozens of followers in 
 ## But still, understand no encryption system is 100% secure.
 <b>If someone is committed they can still rip your avatar. Nothing will be able to protect your assets 100% for certain. However this introduces significant complication.</b>
 
-I am up-front about how exactly you would undo AvaCrypt so that people can be on the lookout for when certain anti-ripping techniques may be compromised. Someone did write a mod that could compromise AvaCryptV1 if you were in the same world as them, someone else wrote a script that could maybe brute force the AvaCryptV1 obfuscation some percentage of the time if your distortion value was too low. 
+I am up-front about how exactly you would undo AvaCrypt so that people can be on the lookout for when certain anti-ripping techniques may be compromised. Someone did write a mod that could compromise AvaCryptV1 if you were in the same world as them, someone else wrote a script that [could maybe brute force AvaCryptV1 if your distortion ratio is low](https://gitlab.com/-/snippets/2202094), but that script didn't manage to undo any of my avatars.
 
 The key now being truly 32 bits does introduce a significant enough barrier to brute forcing that most probably just won't spend the time to do. So this is quite effective against avatars ripped purely off the VRChat API. 
 
@@ -103,7 +103,7 @@ If you are upgrading from V1 you will want to clear out everything previously re
 #### Writing Keys
 
 1. If this is the first time you have uploaded this avatar, after upload completes, go to the GameObject of your encrypted avatar. Find the `Pipeline Manager` component and copy it's blueprint ID. Then paste the blueprint ID into the `Pipeline Manager` on the un-encrypted avatar and click 'Attach'.
-2. Now on the AvaCryptV2Root component click the 'Write Keys' button. This will actually read in and alter the saved 3.0 parameters from your VRChat folder to include the new key so you don't have to enter them in-game. <i>This also means if you "Reset Avatar" in game through the 3.0 menu, it will reset your keys and you will need to re-export them with the 'Write Keys' button!</i>
+2. Now on the AvaCryptV2Root component click the 'Write Keys' button. Ensure VRC is closed when you do this, as VRC might disallow writing to the file. This will actually read in and alter the saved 3.0 parameters from your VRChat folder to include the new key so you don't have to enter them in-game. <i>This also means if you "Reset Avatar" in game through the 3.0 menu, it will reset your keys and you will need to re-export them with the 'Write Keys' button!</i>
 3. This should provide ample error dialogues or console errors, so ensure no errors came up!. It should popup a success dialogue if it did it correctly. If there were issues make sure the 'Vrc Saved Params Path' actually points to your LocalAvatarData folder.
 4. You only need to run 'Write Keys' once on first setup, or when you change keys.
 
