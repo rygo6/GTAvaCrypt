@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
+using Thry;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VRC.SDK3.Avatars.ScriptableObjects;
@@ -31,10 +33,10 @@ namespace GeoTetra.GTAvaCrypt
         bool[] _bitKeys = new bool[KeyCount];
         
         const int KeyCount = 32;
+        StringBuilder _sb = new StringBuilder();
         
         #if UNITY_EDITOR
         readonly AvaCryptController _avaCryptController = new AvaCryptController();
-        readonly AvaCryptMesh _avaCryptMesh = new AvaCryptMesh();
 
         public void ValidateAnimatorController()
         {
@@ -104,7 +106,9 @@ namespace GeoTetra.GTAvaCrypt
             encodedGameObject.name = newName;
             encodedGameObject.SetActive(true);
             
-            _avaCryptMesh.InitializeRandoms(_bitKeys.Length);
+            // _avaCryptMesh.InitializeRandoms(_bitKeys.Length);
+            AvaCryptData data = new AvaCryptData(_bitKeys.Length);
+            string decodeShader = AvaCryptMaterial.GenerateDecodeShader(data, _bitKeys);
             
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
@@ -112,14 +116,9 @@ namespace GeoTetra.GTAvaCrypt
                 if (meshFilter.GetComponent<MeshRenderer>() != null)
                 {
                     var materials = meshFilter.GetComponent<MeshRenderer>().sharedMaterials;
-
-                    foreach (var mat in materials)
+                    if (EncryptMaterials(materials, decodeShader))
                     {
-                        if (mat != null && mat.HasProperty("_BitKey0"))
-                        {
-                            meshFilter.sharedMesh = _avaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, _bitKeys);
-                            break;
-                        }
+                        meshFilter.sharedMesh = AvaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, data);
                     }
                 }
             }
@@ -128,16 +127,12 @@ namespace GeoTetra.GTAvaCrypt
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
                 var materials = skinnedMeshRenderer.sharedMaterials;
-                foreach (var mat in materials)
+                if (EncryptMaterials(materials, decodeShader))
                 {
-                    if (mat != null && mat.HasProperty("_BitKey0"))
-                    {
-                        skinnedMeshRenderer.sharedMesh = _avaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, _bitKeys);
-                        break;
-                    }
+                    skinnedMeshRenderer.sharedMesh = AvaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, data);
                 }
             }
-            
+
             AvaCryptV2Root[] avaCryptRoots = encodedGameObject.GetComponentsInChildren<AvaCryptV2Root>();
             foreach (AvaCryptV2Root avaCryptRoot in avaCryptRoots)
             {
@@ -146,6 +141,45 @@ namespace GeoTetra.GTAvaCrypt
             
             // Disable old for convienence.
             gameObject.SetActive(false);
+        }
+
+        bool EncryptMaterials(Material[] materials, string decodeShader)
+        {
+            bool materialEncrypted = false;
+            foreach (var mat in materials)
+            {
+                if (mat != null && mat.shader.name.Contains(".poiyomi/Poiyomi 8"))
+                {
+                    if (!mat.shader.name.Contains("Hidden/Locked"))
+                    {
+                        ShaderOptimizer.SetLockedForAllMaterials(materials, 1, true, false, false);
+                    }
+
+                    string shaderPath = AssetDatabase.GetAssetPath(mat.shader);
+                    string path = Path.GetDirectoryName(shaderPath);
+                    string decodeShaderPath = Path.Combine(path, "GTModelDecode.cginc");
+;                   File.WriteAllText(decodeShaderPath, decodeShader);
+
+                    string shaderText = File.ReadAllText(shaderPath);
+                    const string avaComment = "//AvaCrypt Injected";
+                    if (!shaderText.Contains("//AvaCrypt Injected"))
+                    {
+                        _sb.Clear();
+                        _sb.AppendLine(avaComment);
+                        _sb.Append(shaderText);
+                        _sb.Replace(AvaCryptMaterial.DefaultPoiUV, AvaCryptMaterial.AlteredPoiUV);
+                        // _sb.Replace(AvaCryptMaterial.DefaultPoiUVArray, AvaCryptMaterial.AlteredPoiUVArray);
+                        _sb.Replace(AvaCryptMaterial.DefaultPoiVert, AvaCryptMaterial.AlteredPoiVert);
+                        _sb.Replace(AvaCryptMaterial.DefaultVertSetup, AvaCryptMaterial.AlteredVertSetup);
+                        // _sb.Replace(AvaCryptMaterial.DefaultUvTransfer, AvaCryptMaterial.AlteredUvTransfer);
+                        File.WriteAllText(shaderPath, _sb.ToString());
+                    }
+
+                    materialEncrypted = true;
+                }
+            }
+
+            return materialEncrypted;
         }
 
         public void WriteBitKeysToExpressions()
