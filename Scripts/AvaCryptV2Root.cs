@@ -2,13 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Thry;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
+using Thry;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Animations;

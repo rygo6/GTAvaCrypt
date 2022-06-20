@@ -48,7 +48,7 @@ namespace GeoTetra.GTAvaCrypt
                 sb1.AppendLine($"float comKey{i} = {firstSignStr}(decodeKey{data.RandomKeyIndex[i*AvaCryptData.CountDivisor]} {firstAddStr} decodeKey{data.RandomKeyIndex[i*AvaCryptData.CountDivisor+1]}) * {data.RandomDivideMultiplier[i]} * {secondSignStr}(decodeKey{data.RandomKeyIndex[i*AvaCryptData.CountDivisor+2]} {secondAddStr} decodeKey{data.RandomKeyIndex[i*AvaCryptData.CountDivisor+3]});");
             }
 
-            string decodeShader = $"{ModelShaderDecodeFirst}{sb0.ToString()}{sb1.ToString()}{ModelShaderDecodeSecond}";
+            string decodeShader = $"{ModelDecodeIfndef}{ModelShaderDecodeFirst}{sb0.ToString()}{sb1.ToString()}{ModelShaderDecodeSecond}{ModelDecodeEndif}";
             return decodeShader;
         }
 
@@ -72,11 +72,12 @@ namespace GeoTetra.GTAvaCrypt
         //
         // public const string AlteredUvTransfer = "o.uv[3] = v.uv3; avUv6 = v.uv6; avUv7 = v.uv7;";
 
+        public const string ModelDecodeIfndef = "#ifndef GTMODELDECODE\n#define GTMODELDECODE\n";
+        
+        public const string ModelDecodeEndif = "#endif\n";
+        
         const string ModelShaderDecodeFirst = 
 @"
-#ifndef GTMODELDECODE
-#define GTMODELDECODE
-
 float _BitKey0;
 float _BitKey1;
 float _BitKey2;
@@ -138,7 +139,6 @@ float4 modelDecode(float4 vertex, float3 normal, float2 uv0, float2 uv1)
 
     return vertex;
 }
-#endif
 ";
     }
 
