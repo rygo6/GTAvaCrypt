@@ -10,16 +10,18 @@ This is a rather invasive anti-avatar-ripping system to be used for VRChat. It w
 
 This system will randomize all the vertices of your avatar's mesh, then write that to disk. Then rely on a custom shader with a 32 bit key to un-randomize the vertex positions in game. This is <b>not</b> done through blend shapes. Rather this will copy, and destructively edit, the 'Basis' layer of your mesh.
 
+Technically this is more like 'Avatar Obfuscation' but calling it 'AvaObfs' didn't really have the same ring to it. But maybe it will keep evolving to use some advanced GPU encryption techniques some day...
+
 ## GTAvaCryptV2
 
 AvaCrypt V1 has been a moderate success. Having gathered dozens of followers in it's Discord, a few imitators of similar technique, and even a few businesses trying to commercialize it. It is the positive feedback that makes me see this as being justified to continue on. But really AvaCrypt V1 was more a quick proof of concept. It does introduce a significant difficulty to avatar ripping but it can go so much further.
 
 ### New Features Of Version 2.2:
 
-Upgraded to work with Poiyomi 8, fixed the terrible workflow with Poiyomi shader and can now be isntalled through Unity Package Manager.
+Upgraded to work with Poiyomi 8, fixed the terrible workflow with Poiyomi shader and can now be installed through Unity Package Manager.
 
 1. The GTPoiyomiToon fork has now been made obsolete and this works with the official Poiyomi 8 package. 
-2. You no longer have to right-click on the 'BitKeys' to mark them animatable. In fact the bitkeys aren't even material properties anymore.
+2. You no longer have to right-click on the 'BitKeys' to mark them animatable. The bitkeys aren't even material properties anymore.
 3. AvaCrypt will "inject" its code into the locked PoiyomiShader when you click "EncryptAvatar" on the AvaCryptV2Root. It does not alter the unlocked PoiyomiShader. So if you want to turn off the AvaCrypt obfuscation to see your mesh again, just unlock the PoiyomiToon material.
 
 ### New Features Of Version 2:
@@ -99,7 +101,7 @@ If you are upgrading from V1 you will want to clear out everything previously re
 
 #### Encrypting and Uploading
 
-1. Ensure any meshes you wish to have encrypted are using the new V2 edit of Poiyomi. It will skip over mesh that do not use this shader.
+1. Ensure any meshes you wish to have encrypted are using Poiyomi 8. It will skip over meshes that do not use this shader.
 2. On the `AvaCryptV2Root` component click the 'Encrypt Avatar' button. This will lock all of your Poiyomi materials, make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted. Be aware your duplicated avatar with "_Encrypted" appended to it's name will appear completely garbled in the editor. This is what other users will see if they do not have your avatar shown. *Do not set the keys on the material inside the Unity Editor.*
 3. Go to the VRChat SDK Menu then 'Build and Publish' your avatar which has '_Encrypted' appended to the name.
 
@@ -110,11 +112,11 @@ If you are upgrading from V1 you will want to clear out everything previously re
 3. This should provide ample error dialogues or console errors, so ensure no errors came up!. It should popup a success dialogue if it did it correctly. If there were issues make sure the 'Vrc Saved Params Path' actually points to your LocalAvatarData folder.
 4. You only need to run 'Write Keys' once on first setup, or when you change keys.
 
-#### Un-Obfuscating Poiyomi Material in Editor
+#### Un-Encrypting Poiyomi Material in Editor
 
-If you wish to see your avatar again as normal and not obfuscated, unlock all of your Poiyomi materials. AvaCrypt only writes itself into the locked Poiyomi shader files, so you can full turn it off just by unlocking the materials again. 
+If you wish to see your avatar again as normal and not encrypted, unlock all of your Poiyomi materials. AvaCrypt only writes itself into the locked Poiyomi shader files, so you can fully turn it off just by unlocking the materials again. 
 
-If you do unlock any of the Poiyomi material you will need to click the 'Encrypt Avatar' button again, as it is during that process that it will inject itself into the locked Poiyomi shaders.
+If you do unlock any of the Poiyomi materials you will need to click the 'Encrypt Avatar' button again before uploaded, as it is during that process that it will inject itself into the locked Poiyomi shaders.
 
 
 
