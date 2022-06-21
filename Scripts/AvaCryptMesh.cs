@@ -69,6 +69,7 @@ namespace GeoTetra.GTAvaCrypt
                 tangents = mesh.tangents,
                 bindposes = mesh.bindposes,
                 boneWeights = mesh.boneWeights,
+                indexformat = mesh.indexformat,
                 uv = mesh.uv,
                 uv2 = mesh.uv2,
                 uv3 = mesh.uv3,
