@@ -14,6 +14,11 @@ This system will randomize all the vertices of your avatar's mesh, then write th
 
 AvaCrypt V1 has been a moderate success. Having gathered dozens of followers in it's Discord, a few imitators of similar technique, and even a few businesses trying to commercialize it. It is the positive feedback that makes me see this as being justified to continue on. But really AvaCrypt V1 was more a quick proof of concept. It does introduce a significant difficulty to avatar ripping but it can go so much further.
 
+### New Features Of Version 2.2.1:
+
+1. Added option under `Tools > GeoTetra > GTAvaCrypt > Unlock All Poi Materials In Hierarchy...` to unlock all Poiyomi 8 materials under a selected GameObject. *~thanks Meru for suggestion*
+2.  Added option under `Tools > GeoTetra > GTAvaCrypt > Check for Update...` to automatically update the package if one is available to make future updates easier.
+
 ### New Features Of Version 2.2:
 
 Upgraded to work with Poiyomi 8, fixed the terrible workflow with Poiyomi shader and can now be isntalled through Unity Package Manager.
@@ -56,6 +61,20 @@ Please take the time to understand the caveats of this system, as it does produc
 
 ### Really do it. Close Unity, all your programs, and make a full clean copy of your entire Unity Project. Or better yet, learn to use git. A small percentage of avatars did have odd things in their mesh that just wouldn't work, or could cause errors, and the script could leave some assets in the project in a rather messed up state.
 
+[comment]: <> (#### Upgrading from V2.2.1 Onwards...)
+
+[comment]: <> (1. If you installed via Unity Package Manager click `Tools > GeoTetra > GTAvaCrypt > Check for Update...`.)
+
+[comment]: <> (If you didn't install via Unity Package Manager, delete and re-import. But should use Unity Package Managers, make it easier and keeps your Assets folder cleaner.)
+
+#### Upgrading from V2.2 to V2.2.1
+
+Hopefully this is the last time you have to do anything but click a single button to upgrade. 
+
+1. In the Unity Editor click `Window > Package Manager`. Then in the Package Manager window click the `+` in the upper left corner and select `Add package from git url...` and then paste `https://github.com/rygo6/GTAvaCrypt.git` in the field and click `Add`. This will update the package if its already in the list.
+
+*If you get an error about git not being installed, you may need to install the git package from here: https://git-scm.com/*
+
 #### Upgrading from V2 to V2.2
 
 Upgrade should be relatively painless and not break anything. Future upgrades from here should be even simpler as it no longer uses an altered poiyomi and installs through the package manager.
@@ -63,6 +82,8 @@ Upgrade should be relatively painless and not break anything. Future upgrades fr
 1. Delete the entire GTPoiyomiToon folder and import the official package from https://github.com/poiyomi/PoiyomiToonShader.
 2. Delete the old GTAvaCrypt folder. 
 3. In the Unity Editor click `Window > Package Manager`. Then in the Package Manager window click the `+` in the upper left corner and select `Add package from git url...` and then paste `https://github.com/rygo6/GTAvaCrypt.git` in the field and click `Add`. This will clone the package via the Package Manager into the Package folder.
+
+*If you get an error about git not being installed, you may need to install the git package from here: https://git-scm.com/*
 
 #### Upgrading from V1
 
@@ -79,6 +100,8 @@ If you are upgrading from V1 you will want to clear out everything previously re
 1. Ensure you are using latest VRC SDK.
 2. Download the Poiyomi 8 package from https://github.com/poiyomi/PoiyomiToonShader and import it into your Unity project.
 3. In the Unity Editor click `Window > Package Manager`. Then in the Package Manager window click the `+` in the upper left corner and select `Add package from git url...` and then paste `https://github.com/rygo6/GTAvaCrypt.git` in the field and click `Add`. This will clone the package via the Package Manager into the Package folder.
+
+*If you get an error about git not being installed, you may need to install the git package from here: https://git-scm.com/*
 
 #### Setup VRC Components.
 
@@ -109,6 +132,8 @@ If you are upgrading from V1 you will want to clear out everything previously re
 2. Now on the AvaCryptV2Root component click the 'Write Keys' button. Ensure VRC is closed when you do this, as VRC might disallow writing to the file. This will actually read in and alter the saved 3.0 parameters from your VRChat folder to include the new key so you don't have to enter them in-game. <i>This also means if you "Reset Avatar" in game through the 3.0 menu, it will reset your keys and you will need to re-export them with the 'Write Keys' button!</i>
 3. This should provide ample error dialogues or console errors, so ensure no errors came up!. It should popup a success dialogue if it did it correctly. If there were issues make sure the 'Vrc Saved Params Path' actually points to your LocalAvatarData folder.
 4. You only need to run 'Write Keys' once on first setup, or when you change keys.
+
+*Ensure VRChat is closed when you write keys otherwise VRChat may just overwrite them immediately with zeroes! ~thanks Meru*
 
 #### Un-Obfuscating Poiyomi Material in Editor
 
