@@ -71,9 +71,12 @@ Please take the time to understand the caveats of this system, as it does produc
 
 #### Upgrading from V2.2 to V2.2.1
 
-Hopefully this is the last time you have to do anything but click a single button to upgrade. 
+Hopefully this is the last time you have to do anything but click a single button to upgrade as I now have a button in the Tools menu to click to automatically do this in the future.
 
-1. In the Unity Editor click `Window > Package Manager`. Then in the Package Manager window click the `+` in the upper left corner and select `Add package from git url...` and then paste `https://github.com/rygo6/GTAvaCrypt.git` in the field and click `Add`. This will update the package if its already in the list.
+Just remove the old one from the Package Manager and add it again. 
+
+1. In the Unity Editor click `Window > Package Manage` then in the `In Project` section find GTAvaCrypt, select it and click `Remove` in the lower right.
+2. In the Package Manager window click the `+` in the upper left corner and select `Add package from git url...` and then paste `https://github.com/rygo6/GTAvaCrypt.git` in the field and click `Add`.
 
 *If you get an error about git not being installed, you may need to install the git package from here: https://git-scm.com/*
 
