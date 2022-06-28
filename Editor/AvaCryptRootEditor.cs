@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace GeoTetra.GTAvaCrypt
@@ -8,17 +9,35 @@ namespace GeoTetra.GTAvaCrypt
     public class AvaCryptRootEditor : Editor
     {
         SerializedProperty _keyNamesProperty;
+        SerializedProperty m_IgnoredMaterialsProperty;
         SerializedProperty _distortRatioProperty;
         SerializedProperty _keysProperty;
         SerializedProperty _thirdsProperty;
         SerializedProperty _vrcSavedParamsPathProperty;
         bool _debugFoldout = false;
-
+        ReorderableList m_IgnoreList; 
+        
         void OnEnable()
         {
             _distortRatioProperty = serializedObject.FindProperty("_distortRatio");
             _keysProperty = serializedObject.FindProperty("_bitKeys");
             _vrcSavedParamsPathProperty = serializedObject.FindProperty("_vrcSavedParamsPath");
+            m_IgnoredMaterialsProperty = serializedObject.FindProperty("m_IgnoredMaterials");
+            
+            m_IgnoreList = new ReorderableList(serializedObject, m_IgnoredMaterialsProperty, true, true, true, true);
+            m_IgnoreList.drawElementCallback = DrawListItems;
+            m_IgnoreList.drawHeaderCallback = DrawHeader; 
+        }
+        
+        void DrawHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Ignored Materials");
+        }
+        
+        void DrawListItems(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            SerializedProperty element = m_IgnoreList.serializedProperty.GetArrayElementAtIndex(index);
+            EditorGUI.PropertyField(rect, element);
         }
 
         public override void OnInspectorGUI()
@@ -44,6 +63,12 @@ namespace GeoTetra.GTAvaCrypt
 
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(_distortRatioProperty);
+            EditorGUILayout.Space();
+            
+            EditorGUILayout.Separator();
+            
+            EditorGUILayout.Space();
+            m_IgnoreList.DoLayoutList();
             EditorGUILayout.Space();
             
             EditorGUILayout.Separator();

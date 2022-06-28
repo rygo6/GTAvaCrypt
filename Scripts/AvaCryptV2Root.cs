@@ -28,6 +28,10 @@ namespace GeoTetra.GTAvaCrypt
         [Header("Ensure this is pointing to your LocalAvatarData folder!")]
         [SerializeField] 
         string _vrcSavedParamsPath = string.Empty;
+
+        [Header("Materials in this list will be ignored.")]
+        [SerializeField] 
+        List<Material> m_IgnoredMaterials;
         
         [SerializeField] 
         bool[] _bitKeys = new bool[KeyCount];
@@ -109,27 +113,52 @@ namespace GeoTetra.GTAvaCrypt
             // _avaCryptMesh.InitializeRandoms(_bitKeys.Length);
             AvaCryptData data = new AvaCryptData(_bitKeys.Length);
             string decodeShader = AvaCryptMaterial.GenerateDecodeShader(data, _bitKeys);
-            
+
             MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
+            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            List<Material> aggregateIgnoredMaterials = new List<Material>();
+
+            // Gather all materials to ignore based on if they are shared in mesh
             foreach (MeshFilter meshFilter in meshFilters)
             {
                 if (meshFilter.GetComponent<MeshRenderer>() != null)
                 {
                     var materials = meshFilter.GetComponent<MeshRenderer>().sharedMaterials;
-                    if (EncryptMaterials(materials, decodeShader))
-                    {
-                        meshFilter.sharedMesh = AvaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, data);
-                    }
+                    AddMaterialsToIgnoreList(materials, aggregateIgnoredMaterials);
                 }
             }
-            
-            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
                 var materials = skinnedMeshRenderer.sharedMaterials;
-                if (EncryptMaterials(materials, decodeShader))
+                AddMaterialsToIgnoreList(materials, aggregateIgnoredMaterials);
+            }
+
+            // Do encrypting
+            foreach (MeshFilter meshFilter in meshFilters)
+            {
+                if (meshFilter.GetComponent<MeshRenderer>() != null)
+                {
+                    var materials = meshFilter.GetComponent<MeshRenderer>().sharedMaterials;
+                    if (EncryptMaterials(materials, decodeShader, aggregateIgnoredMaterials))
+                    {
+                        meshFilter.sharedMesh = AvaCryptMesh.EncryptMesh(meshFilter.sharedMesh, _distortRatio, data);
+                    }
+                    else
+                    {
+                        Debug.Log($"Ignoring Encrypt on {meshFilter.gameObject} contains ignored material!");
+                    }
+                }
+            }
+            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+            {
+                var materials = skinnedMeshRenderer.sharedMaterials;
+                if (EncryptMaterials(materials, decodeShader, aggregateIgnoredMaterials))
                 {
                     skinnedMeshRenderer.sharedMesh = AvaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, data);
+                }
+                else
+                {
+                    Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} contains ignored material!");
                 }
             }
 
@@ -143,9 +172,22 @@ namespace GeoTetra.GTAvaCrypt
             gameObject.SetActive(false);
         }
 
-        bool EncryptMaterials(Material[] materials, string decodeShader)
+        void AddMaterialsToIgnoreList(Material[] materials, List<Material> aggregateIgnoredMaterials)
+        {
+            foreach (var material in materials)
+            {
+                if (m_IgnoredMaterials.Contains(material))
+                {
+                    aggregateIgnoredMaterials.AddRange(materials);
+                    return;
+                }
+            }
+        }
+
+        bool EncryptMaterials(Material[] materials, string decodeShader,  List<Material> aggregateIgnoredMaterials)
         {
             bool materialEncrypted = false;
+            bool ignoredMats = false;
             foreach (var mat in materials)
             {
                 if (mat != null && mat.shader.name.Contains(".poiyomi/Poiyomi 8"))
@@ -153,6 +195,12 @@ namespace GeoTetra.GTAvaCrypt
                     if (!mat.shader.name.Contains("Hidden/Locked"))
                     {
                         ShaderOptimizer.SetLockedForAllMaterials(materials, 1, true, false, false);
+                    }
+
+                    if (aggregateIgnoredMaterials.Contains(mat))
+                    {
+                        ignoredMats = true;
+                        continue;
                     }
 
                     string shaderPath = AssetDatabase.GetAssetPath(mat.shader);
@@ -179,7 +227,7 @@ namespace GeoTetra.GTAvaCrypt
                 }
             }
 
-            return materialEncrypted;
+            return materialEncrypted && !ignoredMats;
         }
 
         public void WriteBitKeysToExpressions()

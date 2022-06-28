@@ -16,6 +16,10 @@ Technically this is more like 'Avatar Obfuscation' but calling it 'AvaObfs' didn
 
 AvaCrypt V1 has been a moderate success. Having gathered dozens of followers in it's Discord, a few imitators of similar technique, and even a few businesses trying to commercialize it. It is the positive feedback that makes me see this as being justified to continue on. But really AvaCrypt V1 was more a quick proof of concept. It does introduce a significant difficulty to avatar ripping but it can go so much further.
 
+### New Features Of Version 2.2.2:
+
+1. Added ignored materials list on AvaCryptV2Root. Be aware if you add a material to this list then any mesh which uses that material will also have all the other materials it uses ignored as well.
+
 ### New Features Of Version 2.2.1:
 
 1. Added option under `Tools > GeoTetra > GTAvaCrypt > Unlock All Poi Materials In Hierarchy...` to unlock all Poiyomi 8 materials under a selected GameObject. *~thanks Meru for suggestion*
