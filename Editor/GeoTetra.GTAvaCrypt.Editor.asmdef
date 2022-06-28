@@ -1,8 +1,8 @@
 {
     "name": "GeoTetra.GTAvaCrypt.Editor",
     "references": [
-        "GUID:d3a687cf174dbbf4387218fd3b7100e5",
-        "GUID:1efbd8ef56fbc0146a62083b5af6074c"
+        "GeoTetra.GTAvaCrypt",
+        "ThryAssemblyDefinition"
     ],
     "includePlatforms": [
         "Editor"

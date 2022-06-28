@@ -95,6 +95,7 @@ namespace GeoTetra.GTAvaUtil
                 EditorUtility.DisplayDialog("Not installed via UPM!",
                     "This upgrade option only works if you installed via UPM. Go to AvaCrypt github and reinstall via UPM if you wish to use this",
                     okText);
+                return;
             }
 
             UnityEditor.PackageManager.Client.Add("https://github.com/rygo6/GTAvaCrypt.git");
