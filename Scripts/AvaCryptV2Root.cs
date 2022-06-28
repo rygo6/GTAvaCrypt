@@ -5,11 +5,11 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VRC.SDK3.Avatars.ScriptableObjects;
+using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
 using Thry;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Animations;
 using VRC.Core;
