@@ -67,11 +67,11 @@ Please take the time to understand the caveats of this system, as it does produc
 
 ### Really do it. Close Unity, all your programs, and make a full clean copy of your entire Unity Project. Or better yet, learn to use git. A small percentage of avatars did have odd things in their mesh that just wouldn't work, or could cause errors, and the script could leave some assets in the project in a rather messed up state.
 
-[comment]: <> (#### Upgrading from V2.2.1 Onwards...)
+#### Upgrading from V2.2.1 Onwards...
 
-[comment]: <> (1. If you installed via Unity Package Manager click `Tools > GeoTetra > GTAvaCrypt > Check for Update...`.)
+1. If you installed via Unity Package Manager click `Tools > GeoTetra > GTAvaCrypt > Check for Update...`.
 
-[comment]: <> (If you didn't install via Unity Package Manager, delete and re-import. But should use Unity Package Managers, make it easier and keeps your Assets folder cleaner.)
+If you didn't install via Unity Package Manager, delete and re-import. But should use Unity Package Managers, make it easier and keeps your Assets folder cleaner.
 
 #### Upgrading from V2.2 to V2.2.1
 
