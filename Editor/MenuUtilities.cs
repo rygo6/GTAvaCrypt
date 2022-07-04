@@ -12,7 +12,7 @@ namespace GeoTetra.GTAvaUtil
         const string okText = "Ok";
         
         [MenuItem("Tools/GeoTetra/GTAvaCrypt/Unlock All Poi Materials In Hierarchy...", false)]
-        static void UnlockAllPoiMaterialsInHierarchy(MenuCommand command)
+        public static void UnlockAllPoiMaterialsInHierarchy(MenuCommand command)
         {
             const string message = "Select a Root GameObject which has children with locked Poiyomi 8 materials.";
             
