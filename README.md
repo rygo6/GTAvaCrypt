@@ -38,7 +38,7 @@ Technically this is more like 'Avatar Obfuscation' but calling it 'AvaObfs' didn
 
 If you didn't install via Unity Package Manager, delete and re-import. But should use Unity Package Manager, makes it easier and keeps your Assets folder cleaner.
 
-If you have a version older than 2.2.1 read the ["Old Installation" instructions](OLD_INTALLATION.md).
+If you have a version older than 2.2.1 read the ["Old Installation" instructions](OLD_INSTALLATION.md).
 
 #### Install AvaCrypt and Poiyomi.
 
