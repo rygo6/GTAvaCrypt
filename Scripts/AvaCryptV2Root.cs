@@ -31,7 +31,7 @@ namespace GeoTetra.GTAvaCrypt
 
         [Header("Materials in this list will be ignored.")]
         [SerializeField] 
-        List<Material> m_IgnoredMaterials;
+        List<Material> m_IgnoredMaterials = new List<Material>();
         
         [SerializeField] 
         bool[] _bitKeys = new bool[KeyCount];
@@ -194,7 +194,13 @@ namespace GeoTetra.GTAvaCrypt
                 {
                     if (!mat.shader.name.Contains("Hidden/Locked"))
                     {
-                        ShaderOptimizer.SetLockedForAllMaterials(materials, 1, true, false, false);
+                        ShaderOptimizer.SetLockedForAllMaterials(new []{mat}, 1, true, false, false);
+                    }
+                    
+                    if (!mat.shader.name.Contains("Hidden/Locked"))
+                    {
+                        Debug.LogError($"{mat.name} {mat.shader.name} Trying to Inject not-locked shader?!");
+                        continue;
                     }
 
                     if (aggregateIgnoredMaterials.Contains(mat))
