@@ -14,7 +14,7 @@ Technically this is more like 'Avatar Obfuscation' but calling it 'AvaObfs' didn
 
 3. [Features](#features)
 
-4. [How secure is this?](#how-secure-is-this?)
+4. [How secure is this?](#how-secure-is-this)
 
 ## Caveats of this System
 
