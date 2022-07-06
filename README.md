@@ -8,13 +8,13 @@ This system will randomize all the vertices of your avatar's mesh, then write th
 
 Technically this is more like 'Avatar Obfuscation' but calling it 'AvaObfs' didn't really have the same ring to it. But maybe it will keep evolving to use some advanced GPU encryption techniques some day...
 
-1. [Caveats of this System](##Caveats-of-this-System)
+1. [Caveats of this System](#caveats-of-this-system)
 
-2. [Usage Instructions](##Usage-Instructions)
+2. [Usage Instructions](#usage-instructions)
 
-3. [Features](##Features)
+3. [Features](#features)
 
-4. [How secure is this?](##How-secure-is-this?)
+4. [How secure is this?](#how-secure-is-this?)
 
 ## Caveats of this System
 
