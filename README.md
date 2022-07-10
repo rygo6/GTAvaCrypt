@@ -69,6 +69,8 @@ If you have a version older than 2.2.1 read the ["Old Installation" instructions
 2. On the `AvaCryptV2Root` component click the 'Encrypt Avatar' button. This will lock all of your Poiyomi materials, make all necessary edits to your AnimatorController, and make a duplicate of your avatar which is encrypted. Be aware your duplicated avatar with "_Encrypted" appended to it's name will appear completely garbled in the editor. This is what other users will see if they do not have your avatar shown. *Do not set the keys on the material inside the Unity Editor.*
 3. Go to the VRChat SDK Menu then 'Build and Publish' your avatar which has '_Encrypted' appended to the name.
 
+*I found some Poi 8 materials get into a weird state with Lock/Unlock and AvaCrypt can't lock them. If you get errors that say something like 'Trying to Inject not-locked shader?!' go to the Poi 8 material it is complaining about and manually click the Lock/Unlock button to get it out of its weird state.*
+
 #### Writing Keys
 
 1. If this is the first time you have uploaded this avatar, after upload completes, go to the GameObject of your encrypted avatar. Find the `Pipeline Manager` component and copy it's blueprint ID. Then paste the blueprint ID into the `Pipeline Manager` on the un-encrypted avatar and click 'Attach'.
@@ -89,6 +91,13 @@ If you have any more questions, or suggestions, feel free to join the GeoTetra d
 https://discord.gg/nbzqtaVP9J
 
 ## Features
+
+### New Features Of Version 2.2.5:
+
+Plethora of bug fixes.
+1. It was possible it could edit the Poiyomi 8 shader before! This is fixed now. If it did this, reimport Poi 8 package.
+2. Double checks more of the animator states to ensure they are properly configured.
+3. Now puts all of the BitKey AnimationClips in a 'BitKeyClips' folder when generating them. If you want to have it move these files automatically, delete all `Avatar_BitKey0_False.anim` animation clips in your Project assets, it should regenerate them properly in the new folder and hook them up.
 
 ### New Features Of Version 2.2.2:
 
