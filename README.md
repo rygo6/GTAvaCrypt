@@ -65,10 +65,10 @@ If you have a version older than 2.2.1 read the ["Old Installation" instructions
 
 #### Delete your old Un-Encrypted Avatar from VRC Backend!
 
-VRC API stores old uploads of your avatar! So if you start uploading an encrypted avatar with an ID that you previously uploaded non-encrypted, it may entirely negate any benefit this provides as rippers can just download an older verison that was not encrypted.
+VRC API stores old uploads of your avatar! So if you start uploading an encrypted avatar with an ID that you previously uploaded non-encrypted, it may entirely negate any benefit this provides as rippers can just download an older version that was not encrypted.
 
 1. Go into the VRChat SDK Inspector in the Unity Editor, then under 'Content Manager' find the avatar you wish to protect and delete it entirely from the VRC backend.
-2. Go to your current avavatar's `Pipeline Manager` component and click the `Detach (Optional)` button so it will generate a new avatar id on upload.
+2. Go to your current avatar's `Pipeline Manager` component and click the `Detach (Optional)` button so it will generate a new avatar id on upload.
 
 #### Encrypting and Uploading
 
