@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -142,22 +143,42 @@ namespace GeoTetra.GTAvaCrypt
                 }
                 else
                 {
-                    Debug.Log($"Layer already existing: {_avaCryptKeyNames[i]}");
-                    AnimatorControllerLayer layer = controller.layers.FirstOrDefault(l => l.name == _avaCryptKeyNames[i]);
-
-                    if (layer == null || layer.stateMachine == null)
+                    var layerList = controller.layers.ToList();
+                    List<AnimatorControllerLayer> layers = layerList.FindAll(l => l.name == _avaCryptKeyNames[i]);
+                    if (layers.Count > 1)
                     {
-                        Debug.Log("Layer missing state machine.");
-                        
-                        controller.RemoveLayer(controller.layers.ToList().IndexOf(layer));
-
+                        Debug.Log("Duplicate layers flushing!");
+                        // Somehow it added multiple layers so flush all duplicates and remake
+                        for (int l = layers.Count - 1; l > -1; --l)
+                        {
+                            int layerIndex = layerList.IndexOf(layers[l]);
+                            if (layerIndex != -1)
+                                controller.RemoveLayer(layerIndex);
+                        }
                         CreateLayer(i, controller);
                     }
-                    else
+                    else if (layers.Count == 0)
                     {
-                        ValidateBitKeySwitch(i, layer, controller);
+                        Debug.Log("Layer missing!");
+                        CreateLayer(i, controller);
+                    }
+                    else if (layers[0].stateMachine == null)
+                    {
+                        Debug.Log("Layer missing stateMachine!");
+                        int layerIndex = layerList.IndexOf(layers[0]);
+                        controller.RemoveLayer(layerIndex);
+                        CreateLayer(i, controller);
                     }
                 }
+            }
+        }
+        
+        public void ValidateBitKeySwitches(AnimatorController controller)
+        {
+            for (int i = 0; i < _avaCryptKeyNames.Length; ++i)
+            {
+                AnimatorControllerLayer layer = controller.layers.FirstOrDefault(l => l.name == _avaCryptKeyNames[i]);
+                ValidateBitKeySwitch(i, layer, controller);
             }
         }
         
@@ -208,9 +229,6 @@ namespace GeoTetra.GTAvaCrypt
             controller.AddLayer(layer);
             AssetDatabase.AddObjectToAsset(layer.stateMachine, controllerPath);
             AssetDatabase.SaveAssets();
-            
-            AddBitKeySwitchState(index, layer, controller, true);
-            AddBitKeySwitchState(index, layer, controller, false);
         }
         
         void ValidateBitKeySwitchState(int index, AnimatorControllerLayer layer, AnimatorController controller, bool switchState)
@@ -283,7 +301,7 @@ namespace GeoTetra.GTAvaCrypt
 
         string StateLabel(bool state) => state ? TrueLabel : FalseLabel;
 
-        public void DeleteAvaCryptV1ObjectsFromController(AnimatorController controller)
+        public void DeleteAvaCryptObjectsFromController(AnimatorController controller)
         {
             string controllerPath = AssetDatabase.GetAssetPath(controller);
             foreach (Object subObject in AssetDatabase.LoadAllAssetsAtPath(controllerPath))
@@ -294,6 +312,17 @@ namespace GeoTetra.GTAvaCrypt
                 }
             }
             AssetDatabase.SaveAssets();
+            
+            foreach (string keyName in _avaCryptKeyNames)
+            {
+                var layerList = controller.layers.ToList();
+                layerList.RemoveAll(l => l.name == keyName);
+                controller.layers = layerList.ToArray();
+                
+                var parametersList = controller.parameters.ToList();
+                parametersList.RemoveAll(l => l.name == keyName);
+                controller.parameters = parametersList.ToArray();
+            }
         }
     }
 }

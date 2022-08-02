@@ -47,9 +47,10 @@ namespace GeoTetra.GTAvaCrypt
             AnimatorController controller = GetAnimatorController();
 
             _avaCryptController.InitializeCount(_bitKeys.Length);
+            _avaCryptController.ValidateLayers(controller);
             _avaCryptController.ValidateAnimations(gameObject, controller);
             _avaCryptController.ValidateParameters(controller);
-            _avaCryptController.ValidateLayers(controller);
+            _avaCryptController.ValidateBitKeySwitches(controller);
         }
 
         AnimatorController GetAnimatorController()
@@ -437,10 +438,11 @@ namespace GeoTetra.GTAvaCrypt
         }
 #endif   
 
-        [ContextMenu("Delete AvaCryptV1 Objects From Controller")]
-        public void DeleteAvaCryptV1ObjectsFromController()
+        [ContextMenu("Delete AvaCrypt Objects From Controller")]
+        public void DeleteAvaCryptObjectsFromController()
         {
-            _avaCryptController.DeleteAvaCryptV1ObjectsFromController(GetAnimatorController());
+            _avaCryptController.InitializeCount(_bitKeys.Length);
+            _avaCryptController.DeleteAvaCryptObjectsFromController(GetAnimatorController());
         }
 #endif
     }

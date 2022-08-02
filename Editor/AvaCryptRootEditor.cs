@@ -92,10 +92,11 @@ namespace GeoTetra.GTAvaCrypt
                 }
                 
                 EditorGUILayout.Space();
-                GUILayout.Label("Deletes all the objects AvaCrypt V1 wrote to your controller.");
-                if (GUILayout.Button("Delete AvaCryptV1 Objects From Controller"))
+                GUILayout.Label("Deletes all the objects AvaCrypt wrote to your controller.");
+                GUILayout.Label("Try running this if something gets weird with encrypting.");
+                if (GUILayout.Button("Delete AvaCrypt Objects From Controller"))
                 {
-                    avaCryptV2Root.DeleteAvaCryptV1ObjectsFromController();
+                    avaCryptV2Root.DeleteAvaCryptObjectsFromController();
                 }
                 
                 EditorGUILayout.Space();
