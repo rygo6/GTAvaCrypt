@@ -111,7 +111,6 @@ namespace GeoTetra.GTAvaCrypt
             encodedGameObject.name = newName;
             encodedGameObject.SetActive(true);
             
-            // _avaCryptMesh.InitializeRandoms(_bitKeys.Length);
             AvaCryptData data = new AvaCryptData(_bitKeys.Length);
             string decodeShader = AvaCryptMaterial.GenerateDecodeShader(data, _bitKeys);
 

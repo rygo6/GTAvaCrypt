@@ -306,7 +306,7 @@ namespace GeoTetra.GTAvaCrypt
             string controllerPath = AssetDatabase.GetAssetPath(controller);
             foreach (Object subObject in AssetDatabase.LoadAllAssetsAtPath(controllerPath))
             {
-                if (subObject.hideFlags == HideFlags.None && subObject.name.Contains("AvaCrypt"))
+                if (subObject != null && subObject.name.Contains("AvaCrypt"))
                 {
                     AssetDatabase.RemoveObjectFromAsset(subObject);
                 }
