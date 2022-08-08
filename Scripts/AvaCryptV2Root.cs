@@ -118,8 +118,8 @@ namespace GeoTetra.GTAvaCrypt
             AvaCryptData data = new AvaCryptData(_bitKeys.Length);
             string decodeShader = AvaCryptMaterial.GenerateDecodeShader(data, _bitKeys);
 
-            MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
-            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>(true);
+            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             List<Material> aggregateIgnoredMaterials = new List<Material>();
 
             // Gather all materials to ignore based on if they are shared in mesh
