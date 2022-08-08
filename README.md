@@ -99,6 +99,14 @@ https://discord.gg/nbzqtaVP9J
 
 ## Features
 
+### New Features Of Version 2.2.8:
+
+1. Added 'Additional Materials' list that lets you specify additional materials to have the AvaCrypt code injected into when you click 'EncryptAvatar'. This will let you encrypt materials used in material swaps.
+2. Made it so the obfuscated mesh/material does not show unless the shaders are fully shown. If your whole avatar is obfuscated then other users will see nothing until they show you.
+3. Added `GeoTetra/UnlitHideWhenShown` shader that will be visible when your avatar is not shown, but hidden when it is shown. This will let placeholder geometry+texture be visible when the avatar is not shown. I included a prefab called `HideWhenShownQuad` which is a quad with a texture that says 'Avatar only visible when fully shown' with this shader on it. Drag this prefab onto your hip bone for a quick to add placeholder, or make whatever placeholder you want.
+4. Fix for some animator controller layers potentially getting messed up. 
+5. Added a 'Delete AvaCrypt Objects From Controller' button under the Debug foldout at the bottom of AvaCryptV2Root component. This will fully flush all avacrypt layers and states from the controller if for some reason your controller gets in a weird state or just want to delete the avacrypt stuff.
+
 ### New Features Of Version 2.2.5:
 
 Plethora of bug fixes.

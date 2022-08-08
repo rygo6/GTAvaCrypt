@@ -28,6 +28,10 @@ namespace GeoTetra.GTAvaCrypt
         [Header("Ensure this is pointing to your LocalAvatarData folder!")]
         [SerializeField] 
         string _vrcSavedParamsPath = string.Empty;
+        
+        [Header("Materials in this list will also be locked and injected.")]
+        [SerializeField] 
+        List<Material> m_AdditionalMaterials = new List<Material>();
 
         [Header("Materials in this list will be ignored.")]
         [SerializeField] 
@@ -132,6 +136,8 @@ namespace GeoTetra.GTAvaCrypt
                 var materials = skinnedMeshRenderer.sharedMaterials;
                 AddMaterialsToIgnoreList(materials, aggregateIgnoredMaterials);
             }
+            
+            EncryptMaterials(m_AdditionalMaterials.ToArray(), decodeShader, aggregateIgnoredMaterials);
 
             // Do encrypting
             foreach (MeshFilter meshFilter in meshFilters)
@@ -226,6 +232,7 @@ namespace GeoTetra.GTAvaCrypt
                         _sb.Replace(AvaCryptMaterial.DefaultPoiVert, AvaCryptMaterial.AlteredPoiVert);
                         _sb.Replace(AvaCryptMaterial.DefaultVertSetup, AvaCryptMaterial.AlteredVertSetup);
                         // _sb.Replace(AvaCryptMaterial.DefaultUvTransfer, AvaCryptMaterial.AlteredUvTransfer);
+                        _sb.Replace(AvaCryptMaterial.DefaultFallback, AvaCryptMaterial.AlteredFallback);
                         File.WriteAllText(shaderPath, _sb.ToString());
                     }
 

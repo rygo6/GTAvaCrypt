@@ -56,6 +56,10 @@ namespace GeoTetra.GTAvaCrypt
             string decodeShader = $"{ModelDecodeIfndef}{ModelShaderDecodeFirst}{sb0.ToString()}{sb1.ToString()}{ModelShaderDecodeSecond}{ModelDecodeEndif}";
             return decodeShader;
         }
+        
+        public const string DefaultFallback = "\"VRCFallback\" = \"Standard\"";
+        
+        public const string AlteredFallback = "\"VRCFallback\" = \"Hidden\"";
 
         public const string DefaultPoiUV = "float2 uv3 : TEXCOORD3;";
         
