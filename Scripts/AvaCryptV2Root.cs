@@ -157,14 +157,22 @@ namespace GeoTetra.GTAvaCrypt
             }
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                var materials = skinnedMeshRenderer.sharedMaterials;
-                if (EncryptMaterials(materials, decodeShader, aggregateIgnoredMaterials))
+                if (skinnedMeshRenderer.GetComponent<Cloth>() == null)
                 {
-                    skinnedMeshRenderer.sharedMesh = AvaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, data);
+                    var materials = skinnedMeshRenderer.sharedMaterials;
+                    if (EncryptMaterials(materials, decodeShader, aggregateIgnoredMaterials))
+                    {
+                        skinnedMeshRenderer.sharedMesh =
+                            AvaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, data);
+                    }
+                    else
+                    {
+                        Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} contains ignored material!");
+                    }
                 }
                 else
                 {
-                    Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} contains ignored material!");
+                    Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} is a cloth material!");
                 }
             }
 

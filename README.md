@@ -99,6 +99,11 @@ https://discord.gg/nbzqtaVP9J
 
 ## Features
 
+### New Features Of Version 2.2.9:
+
+1. Will obfuscate disable GameObjects.
+2. Will ignore meshes being used for cloth.
+
 ### New Features Of Version 2.2.8:
 
 1. Added 'Additional Materials' list that lets you specify additional materials to have the AvaCrypt code injected into when you click 'EncryptAvatar'. This will let you encrypt materials used in material swaps.

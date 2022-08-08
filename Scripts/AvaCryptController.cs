@@ -89,12 +89,12 @@ namespace GeoTetra.GTAvaCrypt
                 if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
                 AssetDatabase.CreateAsset(_clipsFalse[index], clip0Path);
                 AssetDatabase.SaveAssets();
-                Debug.Log($"Adding and Saving Clip: {clip0Path}");
+                // Debug.Log($"Adding and Saving Clip: {clip0Path}");
             }
             else
             {
                 _clipsFalse[index] = controller.animationClips.FirstOrDefault(c => c.name == clipNameFalse);
-                Debug.Log($"Found clip: {clipNameFalse}");
+                // Debug.Log($"Found clip: {clipNameFalse}");
             }
             
             if (controller.animationClips.All(c => c.name != clipNameTrue))
@@ -107,12 +107,12 @@ namespace GeoTetra.GTAvaCrypt
                 if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
                 AssetDatabase.CreateAsset(_clipsTrue[index], clip100Path);
                 AssetDatabase.SaveAssets();
-                Debug.Log($"Adding and Saving Clip: {clip100Path}");
+                // Debug.Log($"Adding and Saving Clip: {clip100Path}");
             }
             else
             {
                 _clipsTrue[index] = controller.animationClips.FirstOrDefault(c => c.name == clipNameTrue);
-                Debug.Log($"Found clip: {clipNameTrue}");
+                // Debug.Log($"Found clip: {clipNameTrue}");
             }
         }
 
@@ -124,11 +124,11 @@ namespace GeoTetra.GTAvaCrypt
                 {
                     controller.AddParameter(keyName, AnimatorControllerParameterType.Bool);
                     AssetDatabase.SaveAssets();
-                    Debug.Log($"Adding parameter: {keyName}");
+                    // Debug.Log($"Adding parameter: {keyName}");
                 }
                 else
                 {
-                    Debug.Log($"Parameter already added: {keyName}");
+                    // Debug.Log($"Parameter already added: {keyName}");
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace GeoTetra.GTAvaCrypt
                     List<AnimatorControllerLayer> layers = layerList.FindAll(l => l.name == _avaCryptKeyNames[i]);
                     if (layers.Count > 1)
                     {
-                        Debug.Log("Duplicate layers flushing!");
+                        // Debug.Log("Duplicate layers flushing!");
                         // Somehow it added multiple layers so flush all duplicates and remake
                         for (int l = layers.Count - 1; l > -1; --l)
                         {
@@ -159,12 +159,12 @@ namespace GeoTetra.GTAvaCrypt
                     }
                     else if (layers.Count == 0)
                     {
-                        Debug.Log("Layer missing!");
+                        // Debug.Log("Layer missing!");
                         CreateLayer(i, controller);
                     }
                     else if (layers[0].stateMachine == null)
                     {
-                        Debug.Log("Layer missing stateMachine!");
+                        // Debug.Log("Layer missing stateMachine!");
                         int layerIndex = layerList.IndexOf(layers[0]);
                         controller.RemoveLayer(layerIndex);
                         CreateLayer(i, controller);
@@ -189,30 +189,30 @@ namespace GeoTetra.GTAvaCrypt
             
             if (layer.stateMachine.states.All(s => s.state.name != trueSwitchName))
             {
-                Debug.Log($"Layer missing BitKeySwtich. {trueSwitchName}");
+                // Debug.Log($"Layer missing BitKeySwtich. {trueSwitchName}");
                 AddBitKeySwitchState(index, layer, controller, true);
             }
             else
             {
-                Debug.Log($"Layer BitKey Switch Validated {trueSwitchName}.");
+                // Debug.Log($"Layer BitKey Switch Validated {trueSwitchName}.");
                 ValidateBitKeySwitchState(index, layer, controller, true);
             }
             
             if (layer.stateMachine.states.All(s => s.state.name != falseSwitchName))
             {
-                Debug.Log($"Layer missing BitKeySwtich. {falseSwitchName}");
+                // Debug.Log($"Layer missing BitKeySwtich. {falseSwitchName}");
                 AddBitKeySwitchState(index, layer, controller, false);
             }
             else
             {
-                Debug.Log($"Layer BitKey Switch Validated {falseSwitchName}.");
+                // Debug.Log($"Layer BitKey Switch Validated {falseSwitchName}.");
                 ValidateBitKeySwitchState(index, layer, controller, false);
             }
         }
 
         void CreateLayer(int index, AnimatorController controller)
         {
-            Debug.Log($"Creating layer: {_avaCryptKeyNames[index]}");
+            // Debug.Log($"Creating layer: {_avaCryptKeyNames[index]}");
             
             string controllerPath = AssetDatabase.GetAssetPath(controller);
 
