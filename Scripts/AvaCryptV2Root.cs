@@ -28,10 +28,14 @@ namespace GeoTetra.GTAvaCrypt
         [Header("Ensure this is pointing to your LocalAvatarData folder!")]
         [SerializeField] 
         string _vrcSavedParamsPath = string.Empty;
+        
+        [Header("Materials in this list will also be locked and injected.")]
+        [SerializeField] 
+        List<Material> m_AdditionalMaterials = new List<Material>();
 
         [Header("Materials in this list will be ignored.")]
         [SerializeField] 
-        List<Material> m_IgnoredMaterials;
+        List<Material> m_IgnoredMaterials = new List<Material>();
         
         [SerializeField] 
         bool[] _bitKeys = new bool[KeyCount];
@@ -47,9 +51,10 @@ namespace GeoTetra.GTAvaCrypt
             AnimatorController controller = GetAnimatorController();
 
             _avaCryptController.InitializeCount(_bitKeys.Length);
+            _avaCryptController.ValidateLayers(controller);
             _avaCryptController.ValidateAnimations(gameObject, controller);
             _avaCryptController.ValidateParameters(controller);
-            _avaCryptController.ValidateLayers(controller);
+            _avaCryptController.ValidateBitKeySwitches(controller);
         }
 
         AnimatorController GetAnimatorController()
@@ -110,12 +115,11 @@ namespace GeoTetra.GTAvaCrypt
             encodedGameObject.name = newName;
             encodedGameObject.SetActive(true);
             
-            // _avaCryptMesh.InitializeRandoms(_bitKeys.Length);
             AvaCryptData data = new AvaCryptData(_bitKeys.Length);
             string decodeShader = AvaCryptMaterial.GenerateDecodeShader(data, _bitKeys);
 
-            MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>();
-            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            MeshFilter[] meshFilters = encodedGameObject.GetComponentsInChildren<MeshFilter>(true);
+            SkinnedMeshRenderer[] skinnedMeshRenderers = encodedGameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             List<Material> aggregateIgnoredMaterials = new List<Material>();
 
             // Gather all materials to ignore based on if they are shared in mesh
@@ -132,6 +136,8 @@ namespace GeoTetra.GTAvaCrypt
                 var materials = skinnedMeshRenderer.sharedMaterials;
                 AddMaterialsToIgnoreList(materials, aggregateIgnoredMaterials);
             }
+            
+            EncryptMaterials(m_AdditionalMaterials.ToArray(), decodeShader, aggregateIgnoredMaterials);
 
             // Do encrypting
             foreach (MeshFilter meshFilter in meshFilters)
@@ -151,14 +157,22 @@ namespace GeoTetra.GTAvaCrypt
             }
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                var materials = skinnedMeshRenderer.sharedMaterials;
-                if (EncryptMaterials(materials, decodeShader, aggregateIgnoredMaterials))
+                if (skinnedMeshRenderer.GetComponent<Cloth>() == null)
                 {
-                    skinnedMeshRenderer.sharedMesh = AvaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, data);
+                    var materials = skinnedMeshRenderer.sharedMaterials;
+                    if (EncryptMaterials(materials, decodeShader, aggregateIgnoredMaterials))
+                    {
+                        skinnedMeshRenderer.sharedMesh =
+                            AvaCryptMesh.EncryptMesh(skinnedMeshRenderer.sharedMesh, _distortRatio, data);
+                    }
+                    else
+                    {
+                        Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} contains ignored material!");
+                    }
                 }
                 else
                 {
-                    Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} contains ignored material!");
+                    Debug.Log($"Ignoring Encrypt on {skinnedMeshRenderer.gameObject} is a cloth material!");
                 }
             }
 
@@ -194,7 +208,13 @@ namespace GeoTetra.GTAvaCrypt
                 {
                     if (!mat.shader.name.Contains("Hidden/Locked"))
                     {
-                        ShaderOptimizer.SetLockedForAllMaterials(materials, 1, true, false, false);
+                        ShaderOptimizer.SetLockedForAllMaterials(new []{mat}, 1, true, false, false);
+                    }
+                    
+                    if (!mat.shader.name.Contains("Hidden/Locked"))
+                    {
+                        Debug.LogError($"{mat.name} {mat.shader.name} Trying to Inject not-locked shader?!");
+                        continue;
                     }
 
                     if (aggregateIgnoredMaterials.Contains(mat))
@@ -220,6 +240,7 @@ namespace GeoTetra.GTAvaCrypt
                         _sb.Replace(AvaCryptMaterial.DefaultPoiVert, AvaCryptMaterial.AlteredPoiVert);
                         _sb.Replace(AvaCryptMaterial.DefaultVertSetup, AvaCryptMaterial.AlteredVertSetup);
                         // _sb.Replace(AvaCryptMaterial.DefaultUvTransfer, AvaCryptMaterial.AlteredUvTransfer);
+                        _sb.Replace(AvaCryptMaterial.DefaultFallback, AvaCryptMaterial.AlteredFallback);
                         File.WriteAllText(shaderPath, _sb.ToString());
                     }
 
@@ -431,10 +452,11 @@ namespace GeoTetra.GTAvaCrypt
         }
 #endif   
 
-        [ContextMenu("Delete AvaCryptV1 Objects From Controller")]
-        public void DeleteAvaCryptV1ObjectsFromController()
+        [ContextMenu("Delete AvaCrypt Objects From Controller")]
+        public void DeleteAvaCryptObjectsFromController()
         {
-            _avaCryptController.DeleteAvaCryptV1ObjectsFromController(GetAnimatorController());
+            _avaCryptController.InitializeCount(_bitKeys.Length);
+            _avaCryptController.DeleteAvaCryptObjectsFromController(GetAnimatorController());
         }
 #endif
     }

@@ -1,8 +1,10 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,6 +14,9 @@ namespace GeoTetra.GTAvaCrypt
     {
         public static string GenerateDecodeShader(AvaCryptData data, bool[] keys)
         {
+            // Set this because someone from russia was getting ,'s in their decimals instead of .'s
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
+            
             float[] decodeKeys = new float[data.DividedCount];
             
             for (int i = 0; i < data.DividedCount; ++i)
@@ -51,6 +56,10 @@ namespace GeoTetra.GTAvaCrypt
             string decodeShader = $"{ModelDecodeIfndef}{ModelShaderDecodeFirst}{sb0.ToString()}{sb1.ToString()}{ModelShaderDecodeSecond}{ModelDecodeEndif}";
             return decodeShader;
         }
+        
+        public const string DefaultFallback = "\"VRCFallback\" = \"Standard\"";
+        
+        public const string AlteredFallback = "\"VRCFallback\" = \"Hidden\"";
 
         public const string DefaultPoiUV = "float2 uv3 : TEXCOORD3;";
         
