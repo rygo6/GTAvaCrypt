@@ -121,12 +121,9 @@ namespace GeoTetra.GTAvaCrypt
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 GUILayout.Label(new GUIContent("Additional Materials", "This lets you specify additional materials to have the AvaCrypt code injected into when you click 'EncryptAvatar'. This will let you encrypt materials used in material swaps."));
-                EditorGUILayout.Separator();
-                EditorGUILayout.Space();
                 m_AdditionalList.DoLayoutList();
                 EditorGUILayout.Space();
                 GUILayout.Label(new GUIContent("Ignored Materials", "These materials will be ignored by Avacrypt. If a mesh contains other materials that are not ignored it will still be encrypted."));
-                EditorGUILayout.Space();
                 m_IgnoreList.DoLayoutList();
                 EditorGUILayout.Space();
                 EditorGUILayout.Separator();
