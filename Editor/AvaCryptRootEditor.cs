@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEditorInternal;
 using GeoTetra.GTAvaUtil;
 
 namespace GeoTetra.GTAvaCrypt
@@ -8,22 +9,61 @@ namespace GeoTetra.GTAvaCrypt
     [CanEditMultipleObjects]
     public class AvaCryptRootEditor : Editor
     {
-        SerializedProperty _keyNamesProperty;
-        SerializedProperty _distortRatioProperty;
-        SerializedProperty _keysProperty;
-        SerializedProperty _thirdsProperty;
-        SerializedProperty _vrcSavedParamsPathProperty;
+        SerializedProperty m_IgnoredMaterialsProperty;
+        SerializedProperty m_AdditionalMaterialsProperty;
+        SerializedProperty m_DistortRatioProperty;
+        SerializedProperty m_KeysProperty;
+        SerializedProperty m_VrcSavedParamsPathProperty;
 
         bool _debugFoldout = false;
         bool _lockKeys = true;
 
+        ReorderableList m_IgnoreList;
+        ReorderableList m_AdditionalList;
+
         Texture2D HeaderTexture;
         void OnEnable()
         {
-            _distortRatioProperty = serializedObject.FindProperty("_distortRatio");
-            _keysProperty = serializedObject.FindProperty("_bitKeys");
-            _vrcSavedParamsPathProperty = serializedObject.FindProperty("_vrcSavedParamsPath");
+            m_DistortRatioProperty = serializedObject.FindProperty("_distortRatio");
+            m_KeysProperty = serializedObject.FindProperty("_bitKeys");
+            m_VrcSavedParamsPathProperty = serializedObject.FindProperty("_vrcSavedParamsPath");
             HeaderTexture = (Texture2D)AssetDatabase.LoadAssetAtPath("Packages/com.geotetra.gtavacrypt/Textures/Titlebar.png", typeof(Texture2D));
+            m_AdditionalMaterialsProperty = serializedObject.FindProperty("m_AdditionalMaterials");
+            m_IgnoredMaterialsProperty = serializedObject.FindProperty("m_IgnoredMaterials");
+
+            m_AdditionalList = new ReorderableList(serializedObject, m_AdditionalMaterialsProperty, true, true, true, true)
+            {
+                drawElementCallback = AdditionalDrawListItems,
+                drawHeaderCallback = AdditionalDrawHeader
+            };
+
+            m_IgnoreList = new ReorderableList(serializedObject, m_IgnoredMaterialsProperty, true, true, true, true)
+            {
+                drawElementCallback = IgnoreDrawListItems,
+                drawHeaderCallback = IgnoreDrawHeader
+            };
+        }
+
+        void AdditionalDrawHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Additional Materials");
+        }
+
+        void AdditionalDrawListItems(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            SerializedProperty element = m_AdditionalList.serializedProperty.GetArrayElementAtIndex(index);
+            EditorGUI.PropertyField(rect, element);
+        }
+
+        void IgnoreDrawHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Ignored Materials");
+        }
+
+        void IgnoreDrawListItems(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            SerializedProperty element = m_IgnoreList.serializedProperty.GetArrayElementAtIndex(index);
+            EditorGUI.PropertyField(rect, element);
         }
 
         public override void OnInspectorGUI()
@@ -56,12 +96,12 @@ namespace GeoTetra.GTAvaCrypt
             //Do the properties
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical(GUILayout.Width((Screen.width / 2) - 20f));
-            _distortRatioProperty.floatValue = GUILayout.HorizontalSlider(_distortRatioProperty.floatValue, .1f, .4f);
+            m_DistortRatioProperty.floatValue = GUILayout.HorizontalSlider(m_DistortRatioProperty.floatValue, .1f, .4f);
             GUILayout.Space(15);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Distort Ratio:");
             GUILayout.FlexibleSpace();
-            EditorGUILayout.FloatField(_distortRatioProperty.floatValue);
+            EditorGUILayout.FloatField(m_DistortRatioProperty.floatValue);
             GUILayout.EndHorizontal();
             GUILayout.Label("Set high enough so your encrypted mesh is visuall. Default = .1", EditorStyles.wordWrappedLabel);
             GUILayout.EndVertical();
@@ -70,12 +110,30 @@ namespace GeoTetra.GTAvaCrypt
             GUILayout.BeginVertical(GUILayout.Width((Screen.width / 2) - 20f));
             GUILayout.Space(3);
             GUILayout.Label("VRC Saved Paramters Path");
-            _vrcSavedParamsPathProperty.stringValue = EditorGUILayout.TextField(_vrcSavedParamsPathProperty.stringValue);
+            m_VrcSavedParamsPathProperty.stringValue = EditorGUILayout.TextField(m_VrcSavedParamsPathProperty.stringValue);
             GUILayout.Label("Ensure this is pointing to your LocalAvatarData folder!", EditorStyles.wordWrappedLabel);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
+            GUILayout.Space(5f);
 
-            EditorGUILayout.Separator();
+            //draw additional and ignored material lists here
+            GUILayout.Label(new GUIContent("Materials", "By default Avacrypt will inject its code into any Poiyomi 8 materials on this avatar. Here you can adjust that behaviour to include or remove some materials."), EditorStyles.boldLabel);
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                GUILayout.Label(new GUIContent("Additional Materials", "This lets you specify additional materials to have the AvaCrypt code injected into when you click 'EncryptAvatar'. This will let you encrypt materials used in material swaps."));
+                EditorGUILayout.Separator();
+                EditorGUILayout.Space();
+                m_AdditionalList.DoLayoutList();
+                EditorGUILayout.Space();
+                GUILayout.Label(new GUIContent("Ignored Materials", "These materials will be ignored by Avacrypt. If a mesh contains other materials that are not ignored it will still be encrypted."));
+                EditorGUILayout.Space();
+                m_IgnoreList.DoLayoutList();
+                EditorGUILayout.Space();
+                EditorGUILayout.Separator();
+            }
+            GUILayout.Space(5f);
+
+            //buttons for poi mats and key lock
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("Unlock Poi mats", "Unlock All Poi Materials In Hierarchy")))
             {
@@ -88,6 +146,7 @@ namespace GeoTetra.GTAvaCrypt
             else if (GUILayout.Button(new GUIContent("Lock BitKeys", "Prevent changes to key selection"), GUILayout.Width((Screen.width / 2) - 20f))) _lockKeys = !_lockKeys;
             GUILayout.EndHorizontal();
 
+            //draw keys here
             using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
             {
                 EditorGUI.BeginDisabledGroup(_lockKeys);
@@ -111,40 +170,40 @@ namespace GeoTetra.GTAvaCrypt
                 GUILayout.BeginVertical();
 
                 //Display in 4 columns
-                for (int i = 0; i < _keysProperty.arraySize/4; i++)
+                for (int i = 0; i < m_KeysProperty.arraySize/4; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    _keysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(_keysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
+                    m_KeysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(m_KeysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
                     GUILayout.EndHorizontal();
                     GUILayout.Space(5f);
                 }
                 GUILayout.EndVertical();
                 GUILayout.FlexibleSpace();
                 GUILayout.BeginVertical();
-                for (int i = _keysProperty.arraySize / 4; i < _keysProperty.arraySize / 2; i++)
+                for (int i = m_KeysProperty.arraySize / 4; i < m_KeysProperty.arraySize / 2; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    _keysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(_keysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
+                    m_KeysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(m_KeysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
                     GUILayout.EndHorizontal();
                     GUILayout.Space(5f);
                 }
                 GUILayout.EndVertical();
                 GUILayout.FlexibleSpace();
                 GUILayout.BeginVertical();
-                for (int i = _keysProperty.arraySize / 2; i < (_keysProperty.arraySize / 4) * 3 ; i++)
+                for (int i = m_KeysProperty.arraySize / 2; i < (m_KeysProperty.arraySize / 4) * 3 ; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    _keysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(_keysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
+                    m_KeysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(m_KeysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
                     GUILayout.EndHorizontal();
                     GUILayout.Space(5f);
                 }
                 GUILayout.EndVertical();
                 GUILayout.FlexibleSpace();
                 GUILayout.BeginVertical();
-                for (int i = (_keysProperty.arraySize / 4) * 3; i < _keysProperty.arraySize; i++)
+                for (int i = (m_KeysProperty.arraySize / 4) * 3; i < m_KeysProperty.arraySize; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    _keysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(_keysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
+                    m_KeysProperty.GetArrayElementAtIndex(i).boolValue = GUILayout.Toggle(m_KeysProperty.GetArrayElementAtIndex(i).boolValue, "BitKey" + i);
                     GUILayout.EndHorizontal();
                     GUILayout.Space(5f);
                 }
@@ -154,7 +213,7 @@ namespace GeoTetra.GTAvaCrypt
 
                 //Generate key button
                 EditorGUILayout.Space();
-                if (GUILayout.Button(new GUIContent("Generate new Keys", "Generate new key overriding old one. Will need to write key again!")))
+                if (GUILayout.Button(new GUIContent("Generate new Keys", "Generate new key overriding old one. Will need to write keys again!")))
                 {
                     avaCryptV2Root.GenerateNewKey();
                 }
@@ -175,9 +234,9 @@ namespace GeoTetra.GTAvaCrypt
                     avaCryptV2Root.ValidateAnimatorController();
                 }
 
-                if (GUILayout.Button(new GUIContent("Delete AvaCryptV1 Objects From Controller", "Deletes all the objects AvaCrypt V1 wrote to your controller."), GUILayout.Height(Screen.width / 10), GUILayout.Width((Screen.width / 2) - 20f)))
+                if (GUILayout.Button(new GUIContent("Delete AvaCrypt Objects From Controller", "Deletes all the objects AvaCrypt wrote to your controller. Try running this if something gets weird with encrypting"), GUILayout.Height(Screen.width / 10), GUILayout.Width((Screen.width / 2) - 20f)))
                 {
-                    avaCryptV2Root.DeleteAvaCryptV1ObjectsFromController();
+                    avaCryptV2Root.DeleteAvaCryptObjectsFromController();
                 }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
