@@ -1,3 +1,5 @@
+## This repo has been archived and will not have updates. Future updates and maintenance will be carried on here: https://github.com/PlagueVRC/AntiRip Support should also be taken to their Discord: https://discord.gg/SyZcuTPXZA
+
 The official root repository for this project is here https://github.com/rygo6/GTAvaCrypt. Only download from a fork if you specifically trust that fork and creator!
 
 # GeoTetra AvaCrypt V2
